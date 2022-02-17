@@ -1,13 +1,10 @@
 import express from "express";
-import { config } from "dotenv";
-import sequelize from "./db";
+import "dotenv/config";
+import sequelize from "./src/database/db";
 import cors from "cors";
-import routers from "./routers";
-import { ErrorHandlingMiddleware } from "./middleware";
-
-const models = require("./models/db_models");
-
-config();
+import routers from "./src/routers";
+import { ErrorHandlingMiddleware } from "./src/middleware";
+import "./src/models/db_models";
 
 const PORT = process.env.PORT || 5000;
 

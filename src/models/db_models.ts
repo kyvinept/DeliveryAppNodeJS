@@ -1,4 +1,4 @@
-import sequelize from "../db";
+import sequelize from "../database/db";
 
 import { Table, Column, Model, Default, DataType } from "sequelize-typescript";
 
