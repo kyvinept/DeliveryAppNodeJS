@@ -1,14 +1,17 @@
-import { Sequelize } from "sequelize-typescript";
+import { Model } from "objection";
+import knex from "knex";
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    dialect: "postgres",
+const connection = knex({
+  client: "pg",
+  connection: {
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT),
-  }
-);
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  },
+});
 
-export default sequelize;
+Model.knex(connection);
+
+export default connection;

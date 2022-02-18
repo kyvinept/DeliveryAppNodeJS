@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { DecodedUser } from "../models/database/user";
 
 export default (req: Request, res: Response, next: NextFunction) => {
   if (req.method === "OPTIONS") {
@@ -13,7 +14,10 @@ export default (req: Request, res: Response, next: NextFunction) => {
       res.status(401).json({ message: "Not authorized" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_STRING);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_ACCESS_SECRET
+    ) as DecodedUser;
     req.user = decoded;
     next();
   } catch (e) {

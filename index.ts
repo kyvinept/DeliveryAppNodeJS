@@ -1,10 +1,9 @@
 import express from "express";
 import "dotenv/config";
-import sequelize from "./src/database/db";
 import cors from "cors";
 import routers from "./src/routers";
 import { ErrorHandlingMiddleware } from "./src/middleware";
-import "./src/models/db_models";
+import "./src/models/database/user";
 
 const PORT = process.env.PORT || 5000;
 
@@ -16,8 +15,6 @@ app.use(ErrorHandlingMiddleware);
 
 const start = async () => {
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
     app.listen(PORT, () =>
       console.log("server has been started on port " + PORT)
     );
