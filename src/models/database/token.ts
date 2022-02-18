@@ -1,7 +1,12 @@
 import { Model } from "objection";
 import knex from "../../database/db";
 
-export class Token extends Model {
+export interface IToken {
+  refreshToken: string;
+  userId: number;
+}
+
+export class Token extends Model implements IToken {
   refreshToken: string;
   userId: number;
 

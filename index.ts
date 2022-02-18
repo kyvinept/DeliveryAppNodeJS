@@ -1,17 +1,24 @@
-import express from "express";
 import "dotenv/config";
-import cors from "cors";
 import routers from "./src/routers";
 import { ErrorHandlingMiddleware } from "./src/middleware";
 import "./src/models/database/user";
+import Koa from "koa";
+import Router from "@koa/router";
+import logger from "koa-logger";
+import json from "koa-json";
+import bodyParser from "koa-bodyparser";
 
 const PORT = process.env.PORT || 5000;
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use("/api", routers);
+const app = new Koa();
+const router = new Router();
+
+router.use("/api", routers.routes());
+app.use(logger());
+app.use(json());
+app.use(bodyParser());
 app.use(ErrorHandlingMiddleware);
+app.use(router.routes()).use(router.allowedMethods());
 
 const start = async () => {
   try {

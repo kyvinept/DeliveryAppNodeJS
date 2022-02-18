@@ -1,9 +1,9 @@
-import Router from "express";
+import Router from "@koa/router";
 import usersRouter from "./userRouter";
 
-const router = Router();
+const router = new Router();
 
 // router.use("/users", usersRouter);
-router.use(usersRouter);
+// router.use(usersRouter.routes());
 
-export default router;
+export default usersRouter;

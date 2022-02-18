@@ -1,50 +1,36 @@
-import { NextFunction, Request, Response } from "express";
-import bcrypt from "bcrypt";
-import ApiError from "../errors/ApiError";
-import { User } from "../models/database/user";
+import { RouterContext } from "@koa/router";
+import Koa from "koa";
 import { UserService } from "../services";
-import { validationResult } from "express-validator";
-class UserController {
+import Controller from "./controller";
+
+class UserController extends Controller {
   private userService = new UserService();
 
-  registration = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return next(ApiError.badRequest("Validation errors", errors.array()));
-      }
-
-      const { email, password } = req.body;
+  registration = async (ctx: RouterContext, next: Koa.Next) => {
+    await this.validate(ctx, async () => {
+      const { email, password } = ctx.request.body;
       const data = await this.userService.registration(email, password);
-      return res.json(data);
-    } catch (e) {
-      next(e);
-    }
+
+      ctx.status = 201;
+      ctx.body = { data };
+    });
   };
 
-  login = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return next(ApiError.badRequest("Validation errors", errors.array()));
-      }
-
-      const { email, password } = req.body;
+  login = async (ctx: RouterContext, next: Koa.Next) => {
+    await this.validate(ctx, async () => {
+      const { email, password } = ctx.request.body;
       const data = await this.userService.login(email, password);
-      return res.json(data);
-    } catch (e) {
-      next(e);
-    }
+
+      ctx.body = { data };
+    });
   };
 
-  logout = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const user = req.user;
+  logout = async (ctx: RouterContext, next: Koa.Next) => {
+    await this.validate(ctx, async () => {
+      const user = ctx.user;
       await this.userService.logout(user);
-      return res.json();
-    } catch (e) {
-      next(e);
-    }
+      ctx.body = {};
+    });
   };
 }
 

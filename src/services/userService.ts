@@ -1,7 +1,8 @@
 import ApiError from "../errors/ApiError";
-import { DecodedUser, User } from "../models/database/user";
+import { IUser, User } from "../models/database/user";
 import { TokenService } from ".";
 import { comparePasswords, hashPassword } from "../helpers/hashPassword";
+import strings from "../strings";
 
 class UserService {
   private tokenService = new TokenService();
@@ -9,7 +10,7 @@ class UserService {
   registration = async (email: string, password: string) => {
     const user = await User.query().findOne({ email });
     if (user) {
-      throw ApiError.badRequest("Such email is already in use");
+      throw ApiError.badRequest(strings.user.emailAlreadyInUse);
     }
 
     const hashedPassword = await hashPassword(password);
@@ -34,12 +35,12 @@ class UserService {
   login = async (email: string, password: string) => {
     const user = await User.query().findOne({ email });
     if (!user) {
-      throw ApiError.badRequest("Such user hasn't been registered.");
+      throw ApiError.badRequest(strings.user.isNotRegistered);
     }
 
     const comparePassword = comparePasswords(password, user.password);
     if (!comparePassword) {
-      throw ApiError.badRequest("Wrong password");
+      throw ApiError.badRequest(strings.user.wrongPassword);
     }
 
     const tokens = this.tokenService.generateTokens({
@@ -53,11 +54,8 @@ class UserService {
     return tokens;
   };
 
-  logout = async (user: DecodedUser) => {
-    // const token = await Token.findOne({ where: { userId: user.id } });
-    // if (token) {
-    //   return await this.tokenService.deleteToken(token.refreshToken);
-    // }
+  logout = async (user: IUser) => {
+    return await this.tokenService.deleteToken(user.id);
   };
 }
 

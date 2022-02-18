@@ -1,17 +1,17 @@
 import { Model } from "objection";
 import knex from "../../database/db";
 
-export interface DecodedUser {
-  id: string;
+export interface IUser {
+  id: number;
   email: string;
   role: string;
 }
 
-export class User extends Model {
+export class User extends Model implements IUser {
   id: number;
   email: string;
   password: string;
-  role: string = "USER";
+  role: string;
 
   static get tableName() {
     return "Users";

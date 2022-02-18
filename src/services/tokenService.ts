@@ -25,8 +25,8 @@ class TokenService {
     return newToken;
   };
 
-  deleteToken = async (refreshToken: string) => {
-    return await Token.query().delete().where("refreshToken", refreshToken);
+  deleteToken = async (userId: number) => {
+    return await Token.query().delete().where("userId", userId);
   };
 }
 
