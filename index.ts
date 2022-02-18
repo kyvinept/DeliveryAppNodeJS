@@ -1,3 +1,4 @@
+import "module-alias/register";
 import "dotenv/config";
 import routers from "./src/routers";
 import { ErrorHandlingMiddleware } from "./src/middleware";

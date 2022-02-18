@@ -1,8 +1,8 @@
-import ApiError from "../errors/ApiError";
-import { IUser, User } from "../models/database/user";
+import ApiError from "errors/ApiError";
+import { IUser, User } from "models/database/user";
 import { TokenService } from ".";
-import { comparePasswords, hashPassword } from "../helpers/hashPassword";
-import strings from "../strings";
+import { comparePasswords, hashPassword } from "helpers/hashPassword";
+import strings from "strings";
 
 class UserService {
   private tokenService = new TokenService();
@@ -18,8 +18,6 @@ class UserService {
       email,
       password: hashedPassword,
     });
-
-    console.log(newUser);
 
     const tokens = this.tokenService.generateTokens({
       id: newUser.id,

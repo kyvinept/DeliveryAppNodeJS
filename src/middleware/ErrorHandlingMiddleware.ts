@@ -1,6 +1,7 @@
-import ApiError from "../errors/ApiError";
+import ApiError from "errors/ApiError";
 import Koa from "koa";
 import HttpStatus from "http-status-codes";
+import strings from "strings";
 
 export default async (ctx: Koa.Context, next: Koa.Next) => {
   try {
@@ -13,6 +14,6 @@ export default async (ctx: Koa.Context, next: Koa.Next) => {
     }
 
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ctx.body = { message: "Unknown error!" };
+    ctx.body = { message: strings.common.unknownError };
   }
 };

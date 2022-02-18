@@ -1,7 +1,7 @@
-import { UserController } from "../controllers";
+import { UserController } from "controllers";
 import Router from "@koa/router";
 import { body } from "koa-req-validation";
-import { AuthMiddleware } from "../middleware";
+import { AuthMiddleware } from "middleware";
 
 const router = new Router();
 

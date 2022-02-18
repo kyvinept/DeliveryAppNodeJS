@@ -1,6 +1,6 @@
 import { RouterContext } from "@koa/router";
 import Koa from "koa";
-import { UserService } from "../services";
+import { UserService } from "services";
 import Controller from "./controller";
 
 class UserController extends Controller {

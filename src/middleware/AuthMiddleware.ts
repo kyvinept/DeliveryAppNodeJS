@@ -1,9 +1,9 @@
 import { RouterContext } from "@koa/router";
 import jwt from "jsonwebtoken";
 import Koa from "koa";
-import ApiError from "../errors/ApiError";
+import ApiError from "errors/ApiError";
 import HttpStatus from "http-status-codes";
-import strings from "../strings";
+import strings from "strings";
 
 export default async (ctx: RouterContext, next: Koa.Next) => {
   try {
