@@ -1,5 +1,6 @@
 import "module-alias/register";
 import "dotenv/config";
+import "reflect-metadata";
 import routers from "./src/routers";
 import { ErrorHandlingMiddleware } from "./src/middleware";
 import "./src/models/database/user";

@@ -1,10 +1,14 @@
 import { RouterContext } from "@koa/router";
 import Koa from "koa";
 import { UserService } from "services";
+import { injectable } from "tsyringe";
 import Controller from "./controller";
 
+@injectable()
 class UserController extends Controller {
-  private userService = new UserService();
+  constructor(private userService: UserService) {
+    super();
+  }
 
   registration = async (ctx: RouterContext, next: Koa.Next) => {
     await this.validate(ctx, async () => {
@@ -42,4 +46,4 @@ class UserController extends Controller {
   };
 }
 
-export default new UserController();
+export default UserController;

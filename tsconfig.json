@@ -2,19 +2,10 @@
     "compilerOptions": {
       "experimentalDecorators": true,
       "esModuleInterop": true,
+      "emitDecoratorMetadata": true,
       "target": "es6",
       "moduleResolution": "Node",
       "typeRoots" : ["./node_modules/@types", "./src/types"],
       "baseUrl": "./src",
-      // "paths": {
-      //   "controllers/*": ["./src/controllers/*"],
-      //   "errors/*": ["./src/errors/*"],
-      //   "helpers/*": ["./src/helpers/*"],
-      //   "middleware/*": ["./src/middleware/*"],
-      //   "models/*": ["./src/models/*"],
-      //   "routers/*": ["./src/routers/*"],
-      //   "services/*": ["./src/services/*"],
-      //   "strings/*": ["./src/strings/*"],
-      // }
     },
 }

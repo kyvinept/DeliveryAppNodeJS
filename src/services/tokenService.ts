@@ -2,7 +2,9 @@ import ApiError from "errors/ApiError";
 import jwt from "jsonwebtoken";
 import { Token } from "models/database";
 import { IUser } from "models/database/user";
+import { injectable } from "tsyringe";
 
+@injectable()
 class TokenService {
   private generateTokens = (data: IUser) => {
     const accessToken = jwt.sign(data, process.env.JWT_ACCESS_SECRET, {

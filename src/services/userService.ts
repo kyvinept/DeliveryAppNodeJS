@@ -3,9 +3,13 @@ import { IUser, User } from "models/database/user";
 import { TokenService } from ".";
 import { comparePasswords, hashPassword } from "helpers/hashPassword";
 import strings from "strings";
+import { delay, inject, injectable } from "tsyringe";
 
+@injectable()
 class UserService {
-  private tokenService = new TokenService();
+  constructor(
+    @inject(delay(() => TokenService)) private tokenService: TokenService
+  ) {}
 
   registration = async (email: string, password: string, role: string) => {
     const user = await User.query().findOne({ email });
