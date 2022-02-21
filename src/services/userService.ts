@@ -19,13 +19,11 @@ class UserService {
       password: hashedPassword,
     });
 
-    const tokens = this.tokenService.generateTokens({
-      id: newUser.id,
+    const tokens = await this.tokenService.generateTokensAndSave({
       email,
+      id: newUser.id,
       role: newUser.role,
     });
-
-    await this.tokenService.saveToken(newUser.id, tokens.refreshToken);
 
     return tokens;
   };
@@ -41,19 +39,22 @@ class UserService {
       throw ApiError.badRequest(strings.user.wrongPassword);
     }
 
-    const tokens = this.tokenService.generateTokens({
-      id: user.id,
+    const tokens = await this.tokenService.generateTokensAndSave({
       email,
+      id: user.id,
       role: user.role,
     });
-
-    await this.tokenService.saveToken(user.id, tokens.refreshToken);
 
     return tokens;
   };
 
   logout = async (user: IUser) => {
     return await this.tokenService.deleteToken(user.id);
+  };
+
+  refresh = async (refreshToken: string) => {
+    const data = await this.tokenService.refresh(refreshToken);
+    return data;
   };
 }
 

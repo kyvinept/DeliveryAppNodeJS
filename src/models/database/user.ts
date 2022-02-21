@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import knex from "../../database/db";
+import knex from "models/database/connection";
 
 export interface IUser {
   id: number;

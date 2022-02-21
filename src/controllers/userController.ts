@@ -32,6 +32,14 @@ class UserController extends Controller {
       ctx.body = {};
     });
   };
+
+  refresh = async (ctx: RouterContext, next: Koa.Next) => {
+    await this.validate(ctx, async () => {
+      const { refreshToken } = ctx.request.body;
+      const data = await this.userService.refresh(refreshToken);
+      ctx.body = { data };
+    });
+  };
 }
 
 export default new UserController();

@@ -1,4 +1,5 @@
 import HttpStatus, { StatusCodes } from "http-status-codes";
+import strings from "strings";
 
 type ErrorType = any[] | any;
 
@@ -15,6 +16,10 @@ class ApiError extends Error {
 
   static unprocessableEntity(message: string, errors: ErrorType = []) {
     return new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, message, errors);
+  }
+
+  static unauthorized() {
+    return new ApiError(HttpStatus.UNAUTHORIZED, strings.common.notAuthorized);
   }
 
   static badRequest(message: string, errors: any[] = []) {
