@@ -27,7 +27,8 @@
     "routers": "src/routers",
     "services": "src/services",
     "strings": "src/strings",
-    "repositories": "src/repositories"
+    "repositories": "src/repositories",
+    "configs": "src/configs"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -45,6 +46,7 @@
     "eslint": "^8.9.0",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.15",
+    "ts-node": "^10.5.0",
     "typescript": "^4.5.5"
   },
   "dependencies": {

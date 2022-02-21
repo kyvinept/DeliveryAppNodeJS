@@ -24,13 +24,13 @@ class TokenService {
   private saveToken = async (userId: number, refreshToken: string) => {
     const tokenData = await this.tokenRepository.findOneByCondition({ userId });
     if (tokenData) {
-      tokenData.refreshToken = await hash(refreshToken);
+      tokenData.refresh_token = await hash(refreshToken);
       await this.tokenRepository.update(tokenData);
       return tokenData;
     }
     const newToken = await this.tokenRepository.create({
       userId,
-      refreshToken,
+      refresh_token: refreshToken,
     });
     return newToken;
   };
@@ -58,7 +58,7 @@ class TokenService {
     if (tokenData) {
       const isTokenMatched = compareStrings(
         refreshToken,
-        tokenData.refreshToken
+        tokenData.refresh_token
       );
       const userData = this.validateRefreshToken(refreshToken) as IUser;
 
