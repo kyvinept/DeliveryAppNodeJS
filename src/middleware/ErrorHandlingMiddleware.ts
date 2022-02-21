@@ -13,6 +13,8 @@ export default async (ctx: Koa.Context, next: Koa.Next) => {
       return;
     }
 
+    console.log(error);
+
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
     ctx.body = { message: strings.common.unknownError };
   }

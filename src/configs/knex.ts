@@ -1,4 +1,3 @@
-import { Model } from "objection";
 import knex from "knex";
 
 const connection = knex({
@@ -11,7 +10,5 @@ const connection = knex({
     database: process.env.DB_NAME,
   },
 });
-
-Model.knex(connection);
 
 export default connection;

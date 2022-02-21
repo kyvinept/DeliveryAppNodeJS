@@ -1,11 +1,14 @@
+import { compareStrings, hash } from "helpers/hash";
 import ApiError from "errors/ApiError";
 import jwt from "jsonwebtoken";
-import { Token } from "models/database";
 import { IUser } from "models/database/user";
+import TokenRepository from "repositories/tokenRepository";
 import { injectable } from "tsyringe";
 
 @injectable()
 class TokenService {
+  constructor(private tokenRepository: TokenRepository) {}
+
   private generateTokens = (data: IUser) => {
     const accessToken = jwt.sign(data, process.env.JWT_ACCESS_SECRET, {
       expiresIn: "30m",
@@ -19,13 +22,16 @@ class TokenService {
   };
 
   private saveToken = async (userId: number, refreshToken: string) => {
-    const tokenData = await Token.query().findOne({ userId });
+    const tokenData = await this.tokenRepository.findOneByCondition({ userId });
     if (tokenData) {
-      tokenData.refreshToken = refreshToken;
-      await tokenData.$query().patch();
+      tokenData.refresh_token = await hash(refreshToken);
+      await this.tokenRepository.update(tokenData);
       return tokenData;
     }
-    const newToken = await Token.query().insert({ userId, refreshToken });
+    const newToken = await this.tokenRepository.create({
+      userId,
+      refresh_token: refreshToken,
+    });
     return newToken;
   };
 
@@ -44,14 +50,19 @@ class TokenService {
     }
   };
 
-  refresh = async (refreshToken: string) => {
-    const tokenData = await Token.query().findOne({ refreshToken });
+  refresh = async (userId: number, refreshToken: string) => {
+    const tokenData = await this.tokenRepository.findOneByCondition({
+      userId,
+    });
 
     if (tokenData) {
-      const userData = this.validateRefreshToken(
-        tokenData.refreshToken
-      ) as IUser;
-      if (userData) {
+      const isTokenMatched = compareStrings(
+        refreshToken,
+        tokenData.refresh_token
+      );
+      const userData = this.validateRefreshToken(refreshToken) as IUser;
+
+      if (isTokenMatched && userData) {
         const tokens = await this.generateTokensAndSave({
           email: userData.email,
           id: userData.id,
@@ -67,7 +78,7 @@ class TokenService {
   };
 
   deleteToken = async (userId: number) => {
-    return await Token.query().delete().where("userId", userId);
+    return await this.tokenRepository.deleteWhere("userId", userId);
   };
 }
 

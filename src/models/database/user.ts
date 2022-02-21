@@ -1,5 +1,4 @@
 import { Model } from "objection";
-import knex from "models/database/connection";
 
 export interface IUser {
   id: number;
@@ -37,19 +36,3 @@ export class User extends Model implements IUser {
     };
   }
 }
-
-async function createSchema() {
-  if (await knex.schema.hasTable("Users")) {
-    return;
-  }
-
-  await knex.schema.createTable("Users", (table) => {
-    table.increments("id").primary();
-    table.string("email");
-    table.string("password");
-    table.string("role").defaultTo(UserRole.user);
-    table.timestamps(true, true);
-  });
-}
-
-createSchema();
