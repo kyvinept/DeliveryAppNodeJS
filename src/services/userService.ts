@@ -1,24 +1,26 @@
 import ApiError from "errors/ApiError";
-import { IUser, User } from "models/database/user";
-import { TokenService } from ".";
-import { comparePasswords, hashPassword } from "helpers/hashPassword";
+import { IUser } from "models/database/user";
+import TokenService from "./tokenService";
+import { compareStrings, hash } from "helpers/hash";
 import strings from "strings";
-import { delay, inject, injectable } from "tsyringe";
+import { injectable } from "tsyringe";
+import UserRepository from "repositories/userRepository";
 
 @injectable()
 class UserService {
   constructor(
-    @inject(delay(() => TokenService)) private tokenService: TokenService
+    private tokenService: TokenService,
+    private userRepository: UserRepository
   ) {}
 
   registration = async (email: string, password: string, role: string) => {
-    const user = await User.query().findOne({ email });
+    const user = await this.userRepository.findOneByCondition({ email });
     if (user) {
       throw ApiError.badRequest(strings.user.emailAlreadyInUse);
     }
 
-    const hashedPassword = await hashPassword(password);
-    const newUser = await User.query().insert({
+    const hashedPassword = await hash(password);
+    const newUser = await this.userRepository.create({
       email,
       password: hashedPassword,
       role,
@@ -34,12 +36,13 @@ class UserService {
   };
 
   login = async (email: string, password: string) => {
-    const user = await User.query().findOne({ email });
+    const user = await this.userRepository.findOneByCondition({ email });
+
     if (!user) {
       throw ApiError.badRequest(strings.user.isNotRegistered);
     }
 
-    const comparePassword = comparePasswords(password, user.password);
+    const comparePassword = compareStrings(password, user.password);
     if (!comparePassword) {
       throw ApiError.badRequest(strings.user.wrongPassword);
     }
@@ -57,8 +60,8 @@ class UserService {
     return await this.tokenService.deleteToken(user.id);
   };
 
-  refresh = async (refreshToken: string) => {
-    const data = await this.tokenService.refresh(refreshToken);
+  refresh = async (userId: number, refreshToken: string) => {
+    const data = await this.tokenService.refresh(userId, refreshToken);
     return data;
   };
 }
