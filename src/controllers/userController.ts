@@ -8,8 +8,8 @@ class UserController extends Controller {
 
   registration = async (ctx: RouterContext, next: Koa.Next) => {
     await this.validate(ctx, async () => {
-      const { email, password } = ctx.request.body;
-      const data = await this.userService.registration(email, password);
+      const { email, password, role } = ctx.request.body;
+      const data = await this.userService.registration(email, password, role);
 
       ctx.status = 201;
       ctx.body = { data };

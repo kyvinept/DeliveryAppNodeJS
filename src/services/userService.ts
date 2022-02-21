@@ -7,7 +7,7 @@ import strings from "strings";
 class UserService {
   private tokenService = new TokenService();
 
-  registration = async (email: string, password: string) => {
+  registration = async (email: string, password: string, role: string) => {
     const user = await User.query().findOne({ email });
     if (user) {
       throw ApiError.badRequest(strings.user.emailAlreadyInUse);
@@ -17,12 +17,13 @@ class UserService {
     const newUser = await User.query().insert({
       email,
       password: hashedPassword,
+      role,
     });
 
     const tokens = await this.tokenService.generateTokensAndSave({
       email,
       id: newUser.id,
-      role: newUser.role,
+      role,
     });
 
     return tokens;

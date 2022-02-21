@@ -7,6 +7,12 @@ export interface IUser {
   role: string;
 }
 
+export enum UserRole {
+  user = "USER",
+  serviceProvider = "SERVICE_PROVIDER",
+  delivery = "DELIVERY",
+}
+
 export class User extends Model implements IUser {
   id: number;
   email: string;
@@ -26,7 +32,7 @@ export class User extends Model implements IUser {
         id: { type: "integer" },
         email: { type: "string" },
         password: { type: "string" },
-        role: { type: "string", default: "USER" },
+        role: { type: "string", default: UserRole.user },
       },
     };
   }
@@ -41,7 +47,7 @@ async function createSchema() {
     table.increments("id").primary();
     table.string("email");
     table.string("password");
-    table.string("role").defaultTo("USER");
+    table.string("role").defaultTo(UserRole.user);
     table.timestamps(true, true);
   });
 }
