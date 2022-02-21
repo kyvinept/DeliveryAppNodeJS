@@ -1,6 +1,6 @@
 import { Model } from "objection";
 
-export default class Repository<T extends Model> {
+export default class BaseRepository<T extends Model> {
   private type: typeof Model;
 
   constructor(type: typeof Model) {
