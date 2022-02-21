@@ -1,10 +1,10 @@
 import { RouterContext } from "@koa/router";
 import Koa from "koa";
 import { UserService } from "services";
-import { injectable } from "tsyringe";
+import { singleton } from "tsyringe";
 import Controller from "./controller";
 
-@injectable()
+@singleton()
 class UserController extends Controller {
   constructor(private userService: UserService) {
     super();
