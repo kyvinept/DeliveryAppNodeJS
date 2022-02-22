@@ -4,13 +4,14 @@ import {AuthMiddleware, ValidatorMiddleware} from 'middleware';
 import {UserRole} from 'models/database/user';
 import {container} from 'tsyringe';
 import Joi from 'joi';
+import {ValidationType} from 'middleware/validatorMiddleware';
 
 const router = new Router();
 const userControllerInstance = container.resolve(UserController);
 
 router.post(
   '/registration',
-  ValidatorMiddleware({
+  ValidatorMiddleware(ValidationType.body, {
     email: Joi.string().email().lowercase().required(),
     password: Joi.string().min(6).max(32).required(),
     role: Joi.string()
@@ -22,7 +23,7 @@ router.post(
 
 router.post(
   '/login',
-  ValidatorMiddleware({
+  ValidatorMiddleware(ValidationType.body, {
     email: Joi.string().email().lowercase().required(),
     password: Joi.string().min(6).max(32).required(),
   }),
@@ -33,12 +34,11 @@ router.post('/logout', AuthMiddleware, userControllerInstance.logout);
 
 router.post(
   '/refresh',
-  ValidatorMiddleware({
+  ValidatorMiddleware(ValidationType.body, {
     refreshToken: Joi.string().required(),
     userId: Joi.number().required(),
   }),
   userControllerInstance.refresh,
 );
-// router.get("/users", AuthMiddleware, UserController.check);
 
 export default router;

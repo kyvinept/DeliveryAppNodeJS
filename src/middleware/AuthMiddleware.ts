@@ -12,8 +12,9 @@ export default async (ctx: RouterContext, next: Koa.Next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
     ctx.user = decoded;
-    await next();
   } catch (e) {
     ctx.throw(ApiError.unauthorized());
   }
+
+  return await next();
 };

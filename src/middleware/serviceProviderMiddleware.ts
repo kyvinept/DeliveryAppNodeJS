@@ -5,9 +5,9 @@ import {IUser, UserRole} from 'models/database/user';
 
 export default async (ctx: RouterContext, next: Koa.Next) => {
   const user = ctx.user as IUser;
-  if (user && user.role === UserRole.serviceProvider) {
+  if (user && user.role == UserRole.serviceProvider) {
     return await next();
   }
 
-  ctx.throw(ApiError.unauthorized());
+  ctx.throw(ApiError.forbidden());
 };

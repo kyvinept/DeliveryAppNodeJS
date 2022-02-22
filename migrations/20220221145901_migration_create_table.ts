@@ -20,8 +20,8 @@ export async function up(knex: Knex): Promise<void> {
       table.increments('id').primary();
       table.string('name');
       table.string('description');
-      table.specificType('location', 'POINT');
-      table.integer('userId').references('id').inTable('Users');
+      table.json('location');
+      table.integer('owner_id').references('id').inTable('Users');
       table.timestamps(true, true);
     });
 }

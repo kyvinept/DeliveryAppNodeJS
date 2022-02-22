@@ -1,4 +1,5 @@
 import {Model} from 'objection';
+import knex from 'configs/knex';
 
 export default class BaseRepository<T extends Model> {
   private type: typeof Model;
@@ -14,6 +15,15 @@ export default class BaseRepository<T extends Model> {
   findOneByCondition = async (condition: Object) => {
     const model = (await this.type.query().findOne(condition)) as T;
     return model;
+  };
+
+  getAll = async (offset: number, limit: number) => {
+    return await this.type.query().select().offset(offset).limit(limit);
+  };
+
+  getCount = async () => {
+    const countModel = await this.type.query().count().first();
+    return (countModel as any).count;
   };
 
   update = async (model: T) => {

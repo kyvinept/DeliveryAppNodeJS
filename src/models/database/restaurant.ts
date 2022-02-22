@@ -2,32 +2,39 @@ import {Model} from 'objection';
 import {Location} from 'models/location';
 
 export interface IRestaurant {
-  ownerId: number;
+  owner_id: number;
   name: string;
   description: string;
   location: Location;
+  images: string[];
 }
 
 export class Restaurant extends Model implements IRestaurant {
   name: string;
   description: string;
-  ownerId: number;
+  owner_id: number;
   location: Location;
+  images: string[];
 
   static get tableName() {
     return 'Restaurants';
   }
 
+  static get jsonAttributes() {
+    return [];
+  }
+
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'description', 'ownerId', 'location'],
+      required: ['name', 'description', 'owner_id', 'images'],
 
       properties: {
         id: {type: 'integer'},
         name: {type: 'string'},
         description: {type: 'string'},
-        ownerId: {type: 'integer'},
+        images: {type: 'array', items: {type: 'string'}},
+        owner_id: {type: 'integer'},
         location: {
           type: 'object',
           properties: {
@@ -47,27 +54,10 @@ export class Restaurant extends Model implements IRestaurant {
         relation: Model.HasOneRelation,
         modelClass: User,
         join: {
-          from: 'Restaurants.ownerId',
+          from: 'Restaurants.owner_id',
           to: 'Users.id',
         },
       },
     };
   }
 }
-
-// async function createSchema() {
-//   if (await knex.schema.hasTable("Restaurants")) {
-//     return;
-//   }
-
-//   await knex.schema.createTable("Restaurants", (table) => {
-//     table.increments("id").primary();
-//     table.string("name");
-//     table.string("description");
-//     // table.
-//     table.integer("ownerId").references("id").inTable("Users");
-//     table.timestamps(true, true);
-//   });
-// }
-
-// // createSchema();
