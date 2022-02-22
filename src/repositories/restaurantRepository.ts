@@ -1,4 +1,4 @@
-import {Restaurant} from 'models/database/restaurant';
+import {Restaurant} from 'models/database';
 import {injectable} from 'tsyringe';
 import BaseRepository from './baseRepository';
 

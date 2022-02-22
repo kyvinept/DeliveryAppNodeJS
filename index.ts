@@ -1,10 +1,9 @@
-import "module-alias/register";
-import "dotenv/config";
-import "reflect-metadata";
-import "./src/models/database/user";
-import { Model } from "objection";
-import connection from "configs/knex";
-import { listen } from "./app";
+import 'module-alias/register';
+import 'dotenv/config';
+import 'reflect-metadata';
+import {Model} from 'objection';
+import connection from 'configs/knex';
+import {listen} from './app';
 
 const PORT = process.env.PORT;
 

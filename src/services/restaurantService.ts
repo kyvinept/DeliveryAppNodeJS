@@ -12,6 +12,14 @@ export interface RestaurantCreateModel {
   location: Location;
 }
 
+export interface RestaurantUpdateModel {
+  id: number;
+  name?: string;
+  description?: string;
+  images?: string[];
+  location?: Location;
+}
+
 @injectable()
 class RestaurantService {
   constructor(private restaurantRepository: RestaurantRepository) {}
@@ -37,6 +45,51 @@ class RestaurantService {
     return restaurant;
   };
 
+  update = async (model: RestaurantUpdateModel, currentUserId: number) => {
+    const restaurant = await this.restaurantRepository.findOneByCondition({
+      id: model.id,
+    });
+
+    if (restaurant.owner_id != currentUserId) {
+      throw ApiError.forbidden();
+    }
+
+    if (!restaurant) {
+      throw ApiError.unprocessableEntity(strings.restaurant.restaurantNotFound);
+    }
+
+    if (model.name) {
+      const newNameRestaurant =
+        await this.restaurantRepository.findOneByCondition({
+          name: model.name,
+        });
+
+      if (newNameRestaurant) {
+        throw ApiError.unprocessableEntity(
+          strings.restaurant.restaurantAlreadyExist,
+        );
+      }
+
+      restaurant.name = model.name;
+    }
+
+    if (model.description) {
+      restaurant.description = model.description;
+    }
+
+    if (model.location) {
+      restaurant.location = model.location;
+    }
+
+    if (model.images) {
+      restaurant.images = [...restaurant.images, ...model.images];
+    }
+
+    this.restaurantRepository.update(restaurant);
+
+    return restaurant;
+  };
+
   getAll = async (page: number, perPage: number) => {
     const restaurants = await this.restaurantRepository.getAll(
       (page - 1) * perPage,
@@ -55,6 +108,19 @@ class RestaurantService {
     }
 
     return restaurant;
+  };
+
+  delete = async (id: number, currentUserId: number) => {
+    const restaurant = await this.restaurantRepository.findOneByCondition({id});
+    if (!restaurant) {
+      throw ApiError.notFound(strings.restaurant.restaurantNotFound);
+    }
+
+    if (restaurant.owner_id != currentUserId) {
+      throw ApiError.forbidden();
+    }
+
+    await this.restaurantRepository.delete(restaurant);
   };
 }
 

@@ -33,4 +33,8 @@ export default class BaseRepository<T extends Model> {
   deleteWhere = async (name: string, param: any) => {
     return await this.type.query().delete().where(name, param);
   };
+
+  delete = async (model: T) => {
+    return await model.$query().delete();
+  };
 }
