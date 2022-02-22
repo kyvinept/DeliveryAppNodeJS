@@ -1,20 +1,20 @@
-import ApiError from "errors/ApiError";
-import { IUser } from "models/database/user";
-import TokenService from "./tokenService";
-import { compareStrings, hash } from "helpers/hash";
-import strings from "strings";
-import { injectable } from "tsyringe";
-import UserRepository from "repositories/userRepository";
+import ApiError from 'errors/ApiError';
+import {IUser} from 'models/database/user';
+import TokenService from './tokenService';
+import {compareStrings, hash} from 'helpers/hash';
+import strings from 'strings';
+import {injectable} from 'tsyringe';
+import UserRepository from 'repositories/userRepository';
 
 @injectable()
 class UserService {
   constructor(
     private tokenService: TokenService,
-    private userRepository: UserRepository
+    private userRepository: UserRepository,
   ) {}
 
   registration = async (email: string, password: string, role: string) => {
-    const user = await this.userRepository.findOneByCondition({ email });
+    const user = await this.userRepository.findOneByCondition({email});
     if (user) {
       throw ApiError.badRequest(strings.user.emailAlreadyInUse);
     }
@@ -36,7 +36,7 @@ class UserService {
   };
 
   login = async (email: string, password: string) => {
-    const user = await this.userRepository.findOneByCondition({ email });
+    const user = await this.userRepository.findOneByCondition({email});
 
     if (!user) {
       throw ApiError.badRequest(strings.user.isNotRegistered);

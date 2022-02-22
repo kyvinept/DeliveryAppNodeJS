@@ -1,4 +1,4 @@
-import { Model } from "objection";
+import {Model} from 'objection';
 
 export interface IUser {
   id: number;
@@ -7,9 +7,9 @@ export interface IUser {
 }
 
 export enum UserRole {
-  user = "USER",
-  serviceProvider = "SERVICE_PROVIDER",
-  delivery = "DELIVERY",
+  user = 'USER',
+  serviceProvider = 'SERVICE_PROVIDER',
+  delivery = 'DELIVERY',
 }
 
 export class User extends Model implements IUser {
@@ -19,19 +19,19 @@ export class User extends Model implements IUser {
   role: string;
 
   static get tableName() {
-    return "Users";
+    return 'Users';
   }
 
   static get jsonSchema() {
     return {
-      type: "object",
-      required: ["email", "password", "role"],
+      type: 'object',
+      required: ['email', 'password', 'role'],
 
       properties: {
-        id: { type: "integer" },
-        email: { type: "string" },
-        password: { type: "string" },
-        role: { type: "string", default: UserRole.user },
+        id: {type: 'integer'},
+        email: {type: 'string'},
+        password: {type: 'string'},
+        role: {type: 'string', default: UserRole.user},
       },
     };
   }

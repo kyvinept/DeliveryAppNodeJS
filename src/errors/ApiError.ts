@@ -1,5 +1,5 @@
-import HttpStatus, { StatusCodes } from "http-status-codes";
-import strings from "strings";
+import HttpStatus, {StatusCodes} from 'http-status-codes';
+import strings from 'strings';
 
 type ErrorType = any[] | any;
 

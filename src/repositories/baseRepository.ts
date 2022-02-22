@@ -1,4 +1,4 @@
-import { Model } from "objection";
+import {Model} from 'objection';
 
 export default class BaseRepository<T extends Model> {
   private type: typeof Model;

@@ -1,19 +1,28 @@
 module.exports = {
-  'env': {
-    'browser': true,
-    'es2021': true,
+  env: {
+    browser: true,
+    es6: true,
   },
-  'extends': [
-    'google',
-  ],
-  'parser': '@typescript-eslint/parser',
-  'parserOptions': {
-    'ecmaVersion': 'latest',
-    'sourceType': 'module',
+  extends: ['plugin:react/recommended', 'google'],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
   },
-  'plugins': [
-    '@typescript-eslint',
-  ],
-  'rules': {
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2018,
+    sourceType: 'module',
+  },
+  plugins: ['react', 'prettier'],
+  rules: {
+    'prettier/prettier': 'error',
+    'require-jsdoc': 0,
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
 };

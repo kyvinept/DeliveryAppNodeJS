@@ -1,4 +1,4 @@
-import { Model } from "objection";
+import {Model} from 'objection';
 
 export interface IToken {
   refresh_token: string;
@@ -10,32 +10,32 @@ export class Token extends Model implements IToken {
   userId: number;
 
   static get tableName() {
-    return "Tokens";
+    return 'Tokens';
   }
 
   static get jsonSchema() {
     return {
-      type: "object",
-      required: ["refresh_token", "userId"],
+      type: 'object',
+      required: ['refresh_token', 'userId'],
 
       properties: {
-        id: { type: "integer" },
-        refresh_token: { type: "string" },
-        userId: { type: "integer" },
+        id: {type: 'integer'},
+        refresh_token: {type: 'string'},
+        userId: {type: 'integer'},
       },
     };
   }
 
   static get relationMappings() {
-    const { User } = require("./user");
+    const {User} = require('./user');
 
     return {
       user: {
         relation: Model.HasOneRelation,
         modelClass: User,
         join: {
-          from: "Tokens.userId",
-          to: "Users.id",
+          from: 'Tokens.userId',
+          to: 'Users.id',
         },
       },
     };

@@ -1,11 +1,11 @@
-import { RouterContext } from "@koa/router";
-import jwt from "jsonwebtoken";
-import Koa from "koa";
-import ApiError from "errors/ApiError";
+import {RouterContext} from '@koa/router';
+import jwt from 'jsonwebtoken';
+import Koa from 'koa';
+import ApiError from 'errors/ApiError';
 
 export default async (ctx: RouterContext, next: Koa.Next) => {
   try {
-    const token = ctx.request.headers.authorization.split(" ")[1];
+    const token = ctx.request.headers.authorization.split(' ')[1];
     if (!token) {
       ctx.throw(ApiError.unauthorized());
     }

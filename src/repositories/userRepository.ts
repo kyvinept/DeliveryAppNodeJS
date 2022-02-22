@@ -1,6 +1,6 @@
-import { User } from "models/database";
-import { injectable } from "tsyringe";
-import BaseRepository from "./baseRepository";
+import {User} from 'models/database';
+import {injectable} from 'tsyringe';
+import BaseRepository from './baseRepository';
 
 @injectable()
 export default class UserRepository extends BaseRepository<User> {

@@ -1,9 +1,9 @@
-import { compareStrings, hash } from "helpers/hash";
-import ApiError from "errors/ApiError";
-import jwt from "jsonwebtoken";
-import { IUser } from "models/database/user";
-import TokenRepository from "repositories/tokenRepository";
-import { injectable } from "tsyringe";
+import {compareStrings, hash} from 'helpers/hash';
+import ApiError from 'errors/ApiError';
+import jwt from 'jsonwebtoken';
+import {IUser} from 'models/database/user';
+import TokenRepository from 'repositories/tokenRepository';
+import {injectable} from 'tsyringe';
 
 @injectable()
 class TokenService {
@@ -11,18 +11,18 @@ class TokenService {
 
   private generateTokens = (data: IUser) => {
     const accessToken = jwt.sign(data, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: "30m",
+      expiresIn: '30m',
     });
 
     const refreshToken = jwt.sign(data, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: "30d",
+      expiresIn: '30d',
     });
 
-    return { accessToken, refreshToken };
+    return {accessToken, refreshToken};
   };
 
   private saveToken = async (userId: number, refreshToken: string) => {
-    const tokenData = await this.tokenRepository.findOneByCondition({ userId });
+    const tokenData = await this.tokenRepository.findOneByCondition({userId});
     if (tokenData) {
       tokenData.refresh_token = await hash(refreshToken);
       await this.tokenRepository.update(tokenData);
@@ -58,7 +58,7 @@ class TokenService {
     if (tokenData) {
       const isTokenMatched = compareStrings(
         refreshToken,
-        tokenData.refresh_token
+        tokenData.refresh_token,
       );
       const userData = this.validateRefreshToken(refreshToken) as IUser;
 
@@ -78,7 +78,7 @@ class TokenService {
   };
 
   deleteToken = async (userId: number) => {
-    return await this.tokenRepository.deleteWhere("userId", userId);
+    return await this.tokenRepository.deleteWhere('userId', userId);
   };
 }
 
