@@ -1,5 +1,10 @@
-import koaBody from 'koa-body';
+import multer from '@koa/multer';
+import constants from 'constants/index';
 
-const upload = koaBody({multipart: true, formidable: {uploadDir: './uploads'}});
+const upload = multer({
+  limits: {
+    fileSize: constants.IMAGE.LIMIT.FILE_SIZE,
+  },
+});
 
-export default upload;
+export default upload.single('image');

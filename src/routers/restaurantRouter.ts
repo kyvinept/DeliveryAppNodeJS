@@ -9,7 +9,6 @@ import {container} from 'tsyringe';
 import Joi from 'joi';
 import RestaurantController from 'controllers/restaurantController';
 import {ValidationType} from 'middleware/validatorMiddleware';
-import koaBody from 'koa-body';
 
 const router = new Router();
 const restaurantControllerInstance = container.resolve(RestaurantController);

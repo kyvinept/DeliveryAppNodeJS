@@ -1,4 +1,4 @@
-import {UserController} from 'controllers';
+import UserController from 'controllers/userController';
 import Router from '@koa/router';
 import {AuthMiddleware, ValidatorMiddleware} from 'middleware';
 import {UserRole} from 'models/database/user';

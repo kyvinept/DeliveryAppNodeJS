@@ -1,11 +1,17 @@
 import {RouterContext} from '@koa/router';
+import ImageController from 'controllers/imageController';
 import Koa from 'koa';
+import ImageService from 'services/imageService';
 import RestaurantService from 'services/restaurantService';
 import {singleton} from 'tsyringe';
 
 @singleton()
 class RestaurantController {
-  constructor(private restaurantService: RestaurantService) {}
+  constructor(
+    private imageController: ImageController,
+    private restaurantService: RestaurantService,
+    private imageService: ImageService,
+  ) {}
 
   create = async (ctx: RouterContext, next: Koa.Next) => {
     const {name, description, images, location} = ctx.request.body;
@@ -78,8 +84,7 @@ class RestaurantController {
   };
 
   uploadImage = async (ctx: RouterContext, next: Koa.Next) => {
-    console.log('ctx.request.files', ctx.request.body.files);
-    ctx.body = {};
+    await this.imageController.save(ctx, next);
   };
 }
 

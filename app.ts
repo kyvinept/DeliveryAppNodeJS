@@ -1,15 +1,17 @@
-import Koa from "koa";
-import logger from "koa-logger";
-import json from "koa-json";
-import bodyParser from "koa-bodyparser";
-import { ErrorHandlingMiddleware } from "./src/middleware";
-import Router from "@koa/router";
-import routers from "./src/routers";
+import Koa from 'koa';
+import logger from 'koa-logger';
+import json from 'koa-json';
+import bodyParser from 'koa-bodyparser';
+import {ErrorHandlingMiddleware} from './src/middleware';
+import Router from '@koa/router';
+import routers from './src/routers';
+import imageRouter from './src/routers/imageRouter';
 
 const app = new Koa();
 const router = new Router();
 
-router.use("/api", routers.routes());
+router.use('/api', routers.routes());
+router.use(imageRouter.routes());
 
 app.use(logger());
 app.use(json());
@@ -19,6 +21,6 @@ app.use(router.routes()).use(router.allowedMethods());
 
 export const listen = (port: string) => {
   app.listen(port, () =>
-    console.log("server has been started on port " + port)
+    console.log('server has been started on port ' + port),
   );
 };

@@ -28,7 +28,8 @@
     "services": "src/services",
     "strings": "src/strings",
     "repositories": "src/repositories",
-    "configs": "src/configs"
+    "configs": "src/configs",
+    "constants": "src/constants"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -40,6 +41,8 @@
     "@types/koa-logger": "^3.1.2",
     "@types/koa__multer": "^2.0.4",
     "@types/koa__router": "^8.0.11",
+    "@types/minio": "^7.0.12",
+    "@types/uuid": "^8.3.4",
     "@types/validator": "^13.7.1",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
@@ -51,6 +54,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
+    "@koa/multer": "^3.0.0",
     "@koa/router": "^10.1.1",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.0",
@@ -59,16 +63,18 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^1.0.3",
     "koa": "^2.13.4",
-    "koa-body": "^4.2.0",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
+    "minio": "^7.0.26",
     "module-alias": "^2.2.2",
+    "multer": "^1.4.4",
     "objection": "^3.0.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.6.0",
+    "uuid": "^8.3.2",
     "validator": "^13.7.0"
   }
 }

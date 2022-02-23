@@ -14,6 +14,10 @@ const en = {
     restaurantAlreadyExist: 'This name is already taken.',
     restaurantNotFound: 'This restaurant was not found.',
   },
+  image: {
+    format: 'Only images are allowed',
+    imageNotFound: 'This image was not found.',
+  },
 };
 
 export default en;
