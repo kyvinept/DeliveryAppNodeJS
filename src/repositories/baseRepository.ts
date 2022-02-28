@@ -1,6 +1,16 @@
 import {Model} from 'objection';
 import knex from 'configs/knex';
 
+export interface JoinModel {
+  joinParams: {
+    table: string;
+    joinedColumn: string;
+    column: string;
+  };
+  selectParams?: string[];
+  whereParams?: Object;
+}
+
 export default class BaseRepository<T extends Model> {
   private type: typeof Model;
 
@@ -17,13 +27,24 @@ export default class BaseRepository<T extends Model> {
     return model;
   };
 
-  getAll = async (offset: number, limit: number) => {
-    return await this.type.query().select().offset(offset).limit(limit);
+  getAll = async (offset: number, limit: number, whereModel: Object = null) => {
+    const condition = this.type.query().select();
+    if (whereModel) {
+      condition.where(whereModel);
+    }
+
+    condition.offset(offset).limit(limit);
+    return await condition;
   };
 
-  getCount = async () => {
-    const countModel = await this.type.query().count().first();
-    return (countModel as any).count;
+  getCount = async (whereModel: Object = null) => {
+    const countModel = this.type.query().count();
+    if (whereModel) {
+      countModel.where(whereModel);
+    }
+
+    countModel.first();
+    return ((await countModel) as any).count;
   };
 
   update = async (model: T) => {
@@ -36,5 +57,39 @@ export default class BaseRepository<T extends Model> {
 
   delete = async (model: T) => {
     return await model.$query().delete();
+  };
+
+  getAllWithPagination = async (
+    page: number,
+    perPage: number,
+    whereCondition: Object = null,
+  ) => {
+    const data = await this.getAll(
+      (page - 1) * perPage,
+      perPage,
+      whereCondition,
+    );
+    const totalCount = await this.getCount();
+    return {data, totalPage: totalCount / perPage};
+  };
+
+  join = async (model: JoinModel) => {
+    let joinModels = this.type
+      .query()
+      .join(
+        model.joinParams.table,
+        model.joinParams.joinedColumn,
+        model.joinParams.column,
+      );
+
+    if (model.selectParams) {
+      joinModels = joinModels.select(...model.selectParams);
+    }
+
+    if (model.whereParams) {
+      joinModels = joinModels.where(model.whereParams);
+    }
+
+    return await joinModels;
   };
 }

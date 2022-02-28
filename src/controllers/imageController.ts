@@ -13,11 +13,8 @@ class UserController {
     ctx.redirect(await this.imageService.getUrl(name));
   };
 
-  save = async (ctx: RouterContext, next: Koa.Next) => {
-    const url = await this.imageService.save(
-      ctx.request.file,
-      ImageType.restaurant,
-    );
+  save = async (ctx: RouterContext, next: Koa.Next, imageType: ImageType) => {
+    const url = await this.imageService.save(ctx.request.file, imageType);
 
     ctx.body = {
       data: {

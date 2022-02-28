@@ -1,17 +1,21 @@
 import {RouterContext} from '@koa/router';
 import ImageController from 'controllers/imageController';
 import Koa from 'koa';
-import ImageService from 'services/imageService';
+import {ImageType} from 'models/imageType';
+import OrderService from 'services/orderService';
 import RestaurantService from 'services/restaurantService';
 import {singleton} from 'tsyringe';
+import BaseController from './baseController';
 
 @singleton()
-class RestaurantController {
+class RestaurantController extends BaseController {
   constructor(
     private imageController: ImageController,
     private restaurantService: RestaurantService,
-    private imageService: ImageService,
-  ) {}
+    private orderService: OrderService,
+  ) {
+    super();
+  }
 
   create = async (ctx: RouterContext, next: Koa.Next) => {
     const {name, description, images, location} = ctx.request.body;
@@ -58,14 +62,11 @@ class RestaurantController {
       perPageInt,
     );
 
-    ctx.body = {
-      data: restaurantsModel.restaurants,
-      metadata: {
-        page: pageInt,
-        per_page: perPageInt,
-        total_page: Math.ceil(restaurantsModel.totalPage),
-      },
-    };
+    ctx.body = this.paginationBody({
+      data: restaurantsModel,
+      page: pageInt,
+      perPage: perPageInt,
+    });
   };
 
   getOne = async (ctx: RouterContext, next: Koa.Next) => {
@@ -84,7 +85,7 @@ class RestaurantController {
   };
 
   uploadImage = async (ctx: RouterContext, next: Koa.Next) => {
-    await this.imageController.save(ctx, next);
+    await this.imageController.save(ctx, next, ImageType.restaurant);
   };
 }
 

@@ -23,18 +23,25 @@ class ImageService {
     return file.filename;
   };
 
+  replaceImages = async (oldLinks: string[], newLinks: string[]) => {
+    const linksToRemove = oldLinks.filter((item) => !newLinks.includes(item));
+
+    for (let index = 0; index < linksToRemove.length; index++) {
+      await this.delete(linksToRemove[index]);
+    }
+  };
+
   delete = async (name: string) => {
     const image = await this.imageRepository.findOneByCondition({
       original: name,
     });
 
-    if (!image) {
-      throw ApiError.notFound(strings.image.imageNotFound);
+    if (image) {
+      console.log('Image was found and deleted');
+
+      await this.deleteFromBucket(name);
+      await this.imageRepository.delete(image);
     }
-
-    await this.deleteFromBucket(name);
-
-    await this.imageRepository.delete(image);
   };
 
   getUrl = async (name: string) => {
@@ -47,36 +54,27 @@ class ImageService {
     return v4() + '_original.' + type;
   };
 
-  private saveToBucket = (
+  private saveToBucket = async (
     fileName: string,
     fileSize: number,
     fileBuffer: Buffer,
     contentType: string,
   ) => {
-    return new Promise<void>((resolve, reject) => {
-      const metadata = {
-        'Content-type': contentType,
-      };
+    const metadata = {
+      'Content-type': contentType,
+    };
 
-      minio.putObject(
-        process.env.BUCKET_NAME,
-        fileName,
-        fileBuffer,
-        fileSize,
-        metadata,
-        (error, result) => {
-          if (error) {
-            reject();
-          }
-
-          resolve();
-        },
-      );
-    });
+    await minio.putObject(
+      process.env.BUCKET_NAME,
+      fileName,
+      fileBuffer,
+      fileSize,
+      metadata,
+    );
   };
 
-  private deleteFromBucket = (name: string) => {
-    return minio.removeObject(process.env.BUCKET_NAME, name);
+  private deleteFromBucket = async (name: string) => {
+    return await minio.removeObject(process.env.BUCKET_NAME, name);
   };
 }
 

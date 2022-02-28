@@ -1,17 +1,18 @@
 import Router from '@koa/router';
 import {
   AuthMiddleware,
-  ValidatorMiddleware,
   ServiceProviderMiddleware,
   UploadImageMiddleware,
+  ValidatorMiddleware,
 } from 'middleware';
 import {container} from 'tsyringe';
 import Joi from 'joi';
-import RestaurantController from 'controllers/restaurantController';
 import {ValidationType} from 'middleware/validatorMiddleware';
+import DishController from 'controllers/dishController';
+import {DishType} from 'models/dishType';
 
 const router = new Router();
-const restaurantControllerInstance = container.resolve(RestaurantController);
+const dishControllerInstance = container.resolve(DishController);
 
 router.post(
   '/',
@@ -21,60 +22,58 @@ router.post(
     name: Joi.string().min(2).max(100).required(),
     description: Joi.string().min(10).required(),
     images: Joi.array().items(Joi.string().uri()).min(1).required(),
-    location: Joi.object({
-      latitude: Joi.string().required(),
-      longitude: Joi.string().required(),
-    }).required(),
+    price: Joi.number().min(0).required(),
+    type: Joi.string()
+      .valid(...Object.values(DishType).map((item) => item.toString()))
+      .default(DishType.regular),
   }),
-  restaurantControllerInstance.create,
+  ValidatorMiddleware(ValidationType.link, {
+    restaurantId: Joi.number().min(1).required(),
+  }),
+  dishControllerInstance.create,
 );
 
 router.patch(
   '/:id',
   AuthMiddleware,
   ServiceProviderMiddleware,
-  ValidatorMiddleware(ValidationType.link, {
-    id: Joi.number().min(1).required(),
-  }),
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100),
     description: Joi.string().min(10),
     images: Joi.array().items(Joi.string().uri()).min(1),
-    location: Joi.object({
-      latitude: Joi.string().required(),
-      longitude: Joi.string().required(),
-    }),
+    price: Joi.number().min(0),
+    type: Joi.string().valid(
+      ...Object.values(DishType).map((item) => item.toString()),
+    ),
   }),
-  restaurantControllerInstance.update,
+  ValidatorMiddleware(ValidationType.link, {
+    restaurantId: Joi.number().min(1).required(),
+    id: Joi.number().min(1).required(),
+  }),
+  dishControllerInstance.update,
+);
+
+router.get(
+  '/:id',
+  AuthMiddleware,
+  ValidatorMiddleware(ValidationType.link, {
+    restaurantId: Joi.number().min(1).required(),
+    id: Joi.number().min(1).required(),
+  }),
+  dishControllerInstance.getOne,
 );
 
 router.get(
   '/',
   AuthMiddleware,
+  ValidatorMiddleware(ValidationType.link, {
+    restaurantId: Joi.number().min(1).required(),
+  }),
   ValidatorMiddleware(ValidationType.query, {
     page: Joi.number().min(1).default(1),
     per_page: Joi.number().min(1).default(10),
   }),
-  restaurantControllerInstance.getAll,
-);
-
-router.get(
-  '/:id',
-  AuthMiddleware,
-  ValidatorMiddleware(ValidationType.link, {
-    id: Joi.number().min(1).required(),
-  }),
-  restaurantControllerInstance.getOne,
-);
-
-router.delete(
-  '/:id',
-  AuthMiddleware,
-  ServiceProviderMiddleware,
-  ValidatorMiddleware(ValidationType.link, {
-    id: Joi.number().min(1).required(),
-  }),
-  restaurantControllerInstance.delete,
+  dishControllerInstance.getAll,
 );
 
 router.post(
@@ -82,7 +81,7 @@ router.post(
   AuthMiddleware,
   ServiceProviderMiddleware,
   UploadImageMiddleware,
-  restaurantControllerInstance.uploadImage,
+  dishControllerInstance.uploadImage,
 );
 
 export default router;

@@ -31,10 +31,19 @@ export default (type: ValidationType, object: Object) => {
         abortEarly: false,
       });
 
-      if (type === ValidationType.query) {
-        ctx.query = result;
+      switch (type) {
+        case ValidationType.body:
+          ctx.request.body = result;
+          break;
+        case ValidationType.query:
+          ctx.query = result;
+          break;
+        default:
+          break;
       }
     } catch (e) {
+      console.log(e);
+
       ctx.throw(
         ApiError.unprocessableEntity(strings.common.validationError, e.details),
       );

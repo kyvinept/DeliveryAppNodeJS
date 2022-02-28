@@ -3,6 +3,7 @@ import strings from 'strings';
 import {injectable} from 'tsyringe';
 import RestaurantRepository from 'repositories/restaurantRepository';
 import {Location} from 'models/location';
+import ImageService from './imageService';
 
 export interface RestaurantCreateModel {
   ownerId: number;
@@ -22,7 +23,10 @@ export interface RestaurantUpdateModel {
 
 @injectable()
 class RestaurantService {
-  constructor(private restaurantRepository: RestaurantRepository) {}
+  constructor(
+    private restaurantRepository: RestaurantRepository,
+    private imageService: ImageService,
+  ) {}
 
   create = async (model: RestaurantCreateModel) => {
     const foundedRestaurant =
@@ -82,7 +86,9 @@ class RestaurantService {
     }
 
     if (model.images) {
-      restaurant.images = [...restaurant.images, ...model.images];
+      await this.imageService.replaceImages(restaurant.images, model.images);
+
+      restaurant.images = model.images;
     }
 
     this.restaurantRepository.update(restaurant);
@@ -91,14 +97,12 @@ class RestaurantService {
   };
 
   getAll = async (page: number, perPage: number) => {
-    const restaurants = await this.restaurantRepository.getAll(
-      (page - 1) * perPage,
+    const data = await this.restaurantRepository.getAllWithPagination(
+      page,
       perPage,
     );
 
-    const totalCount = await this.restaurantRepository.getCount();
-
-    return {restaurants, totalPage: totalCount / perPage};
+    return data;
   };
 
   getOne = async (id: number) => {
@@ -111,16 +115,14 @@ class RestaurantService {
   };
 
   delete = async (id: number, currentUserId: number) => {
-    const restaurant = await this.restaurantRepository.findOneByCondition({id});
-    if (!restaurant) {
-      throw ApiError.notFound(strings.restaurant.restaurantNotFound);
-    }
-
-    if (restaurant.owner_id != currentUserId) {
-      throw ApiError.forbidden();
-    }
-
-    await this.restaurantRepository.delete(restaurant);
+    // const restaurant = await this.restaurantRepository.findOneByCondition({id});
+    // if (!restaurant) {
+    //   throw ApiError.notFound(strings.restaurant.restaurantNotFound);
+    // }
+    // if (restaurant.owner_id != currentUserId) {
+    //   throw ApiError.forbidden();
+    // }
+    // await this.restaurantRepository.delete(restaurant);
   };
 }
 
