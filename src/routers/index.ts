@@ -7,9 +7,9 @@ import dishRouter from './dishRouter';
 
 const router = new Router();
 
+router.use(orderRouter.routes());
 router.use(usersRouter.routes());
 router.use(imageRouter.routes());
-router.use(orderRouter.routes());
 router.use('/restaurants', restaurantRouter.routes());
 router.use('/restaurants/:restaurantId/dishes', dishRouter.routes());
 

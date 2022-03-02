@@ -3,6 +3,7 @@ import Koa from 'koa';
 import {singleton} from 'tsyringe';
 import OrderService from 'services/orderService';
 import BaseController from './baseController';
+import {UserRole} from 'models/database/user';
 
 @singleton()
 class OrderController extends BaseController {
@@ -36,16 +37,23 @@ class OrderController extends BaseController {
     ctx.body = {};
   };
 
-  getAllForUser = async (ctx: RouterContext, next: Koa.Next) => {
+  getAllForRestaurant = async (ctx: RouterContext, next: Koa.Next) => {
     const {page, per_page} = ctx.query;
     const pageInt = parseInt(page as string);
     const perPageInt = parseInt(per_page as string);
-    const userId = ctx.user.id;
 
-    const data = await this.orderService.getAllForUser(
-      userId,
+    const restaurantId = parseInt(ctx.params.id);
+
+    let userId = null;
+    if (ctx.user.role == UserRole.user) {
+      userId = ctx.user.id;
+    }
+
+    const data = await this.orderService.getAllForRestaurant(
       pageInt,
       perPageInt,
+      restaurantId,
+      userId,
     );
 
     ctx.body = this.paginationBody({
@@ -53,6 +61,27 @@ class OrderController extends BaseController {
       page: pageInt,
       perPage: perPageInt,
     });
+  };
+
+  getAll = async (ctx: RouterContext, next: Koa.Next) => {
+    const {page, per_page} = ctx.query;
+    const pageInt = parseInt(page as string);
+    const perPageInt = parseInt(per_page as string);
+
+    const data = await this.orderService.getAll(pageInt, perPageInt);
+
+    ctx.body = this.paginationBody({
+      data,
+      page: pageInt,
+      perPage: perPageInt,
+    });
+  };
+
+  changeStatus = async (ctx: RouterContext, next: Koa.Next) => {
+    const id = parseInt(ctx.params.id);
+    const {status} = ctx.request.body;
+    const data = await this.orderService.changeStatus(id, status);
+    ctx.body = {data};
   };
 }
 

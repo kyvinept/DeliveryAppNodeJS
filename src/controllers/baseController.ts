@@ -7,7 +7,8 @@ export default class BaseController {
       metadata: {
         page: model.page,
         per_page: model.perPage,
-        total_page: Math.ceil(model.data.totalPage),
+        total_count: model.data.totalCount,
+        total_page: Math.ceil(model.data.totalCount / model.perPage),
       },
     };
   };

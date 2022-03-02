@@ -9,6 +9,8 @@ const en = {
     emailAlreadyInUse: 'Such email is already in use',
     isNotRegistered: "Such user hasn't been registered.",
     wrongPassword: 'Wrong password',
+    tokenWasExpired:
+      'This token is not active now! Please resend the mail again.',
   },
   restaurant: {
     restaurantAlreadyExist: 'This name is already taken.',
@@ -21,6 +23,14 @@ const en = {
   image: {
     format: 'Only images are allowed',
     imageNotFound: 'This image was not found.',
+  },
+  order: {
+    orderNotFound: 'This order was not found.',
+  },
+  mail: {
+    forgetPasswordSubject: 'Recovering account',
+    forgetPasswordText: (token: string) => `Recover there ${token}`,
+    emailHasBeenSent: 'The mail with details has been successfully sent',
   },
 };
 

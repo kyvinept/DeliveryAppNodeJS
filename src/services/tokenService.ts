@@ -21,7 +21,10 @@ class TokenService {
     return {accessToken, refreshToken};
   };
 
-  private saveToken = async (userId: number, refreshToken: string) => {
+  private saveRefreshTokenToken = async (
+    userId: number,
+    refreshToken: string,
+  ) => {
     const tokenData = await this.tokenRepository.findOneByCondition({userId});
     if (tokenData) {
       tokenData.refresh_token = await hash(refreshToken);
@@ -37,17 +40,27 @@ class TokenService {
 
   generateTokensAndSave = async (user: IUser) => {
     const tokens = this.generateTokens(user);
-    await this.saveToken(user.id, tokens.refreshToken);
+    await this.saveRefreshTokenToken(user.id, tokens.refreshToken);
     return tokens;
   };
 
+  generateForgetPasswordToken = (email: string) => {
+    const forgetPasswordToken = jwt.sign(
+      {email},
+      process.env.JWT_FORGET_PASSWORD_SECRET,
+      {
+        expiresIn: '1h',
+      },
+    );
+    return forgetPasswordToken;
+  };
+
+  validateForgetPasswordToken = (token: string) => {
+    return this.validateToken(token, process.env.JWT_FORGET_PASSWORD_SECRET);
+  };
+
   validateRefreshToken = (token: string) => {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-      return decoded;
-    } catch (e) {
-      return null;
-    }
+    return this.validateToken(token, process.env.JWT_REFRESH_SECRET);
   };
 
   refresh = async (userId: number, refreshToken: string) => {
@@ -79,6 +92,15 @@ class TokenService {
 
   deleteToken = async (userId: number) => {
     return await this.tokenRepository.deleteWhere('userId', userId);
+  };
+
+  private validateToken = (token: string, jwtSecretKey: string): any | null => {
+    try {
+      const decoded = jwt.verify(token, jwtSecretKey);
+      return decoded;
+    } catch (e) {
+      return null;
+    }
   };
 }
 

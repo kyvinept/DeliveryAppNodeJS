@@ -3,6 +3,7 @@ import strings from 'strings';
 import {injectable} from 'tsyringe';
 import OrderRepository from 'repositories/orderRepository';
 import RestaurantOrderRepository from 'repositories/restaurantOrderRepository';
+import {OrderStatus} from 'models/orderStatus';
 
 export interface OrderModel {
   restaurantId: number;
@@ -47,8 +48,16 @@ class OrderService {
     await this.orderRepository.deleteWhere('id', id);
   };
 
-  getAllForUser = async (userId: number, page: number, perPage: number) => {
-    const whereCondition = {user_id: userId};
+  getAllForRestaurant = async (
+    page: number,
+    perPage: number,
+    restaurantId: number,
+    userId: number = null,
+  ) => {
+    const whereCondition = {restaurant_id: restaurantId} as any;
+    if (userId) {
+      whereCondition.user_id = userId;
+    }
 
     const data = await this.orderRepository.getAllWithPagination(
       page,
@@ -56,6 +65,22 @@ class OrderService {
       whereCondition,
     );
     return data;
+  };
+
+  getAll = async (page: number, perPage: number) => {
+    const data = await this.orderRepository.getAllWithPagination(page, perPage);
+    return data;
+  };
+
+  changeStatus = async (id: number, status: OrderStatus) => {
+    const order = await this.orderRepository.findOneByCondition({id});
+    if (!order) {
+      throw ApiError.unprocessableEntity(strings.order.orderNotFound);
+    }
+
+    order.status = status;
+    await this.orderRepository.update(order);
+    return order;
   };
 }
 

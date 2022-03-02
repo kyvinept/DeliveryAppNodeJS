@@ -69,8 +69,8 @@ export default class BaseRepository<T extends Model> {
       perPage,
       whereCondition,
     );
-    const totalCount = await this.getCount();
-    return {data, totalPage: totalCount / perPage};
+    const totalCount = await this.getCount(whereCondition);
+    return {data, totalCount: parseInt(totalCount)};
   };
 
   join = async (model: JoinModel) => {

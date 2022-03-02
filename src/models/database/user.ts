@@ -4,6 +4,7 @@ export interface IUser {
   id: number;
   email: string;
   role: string;
+  forget_password_token?: string;
 }
 
 export enum UserRole {
@@ -17,6 +18,7 @@ export class User extends Model implements IUser {
   email: string;
   password: string;
   role: string;
+  forget_password_token?: string;
 
   static get tableName() {
     return 'Users';
@@ -31,6 +33,7 @@ export class User extends Model implements IUser {
         id: {type: 'integer'},
         email: {type: 'string'},
         password: {type: 'string'},
+        forget_password_token: {type: 'string'},
         role: {type: 'string', default: UserRole.user},
       },
     };

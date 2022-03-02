@@ -41,4 +41,21 @@ router.post(
   userControllerInstance.refresh,
 );
 
+router.post(
+  '/forget_password',
+  ValidatorMiddleware(ValidationType.body, {
+    email: Joi.string().email().lowercase().required(),
+  }),
+  userControllerInstance.forgetPassword,
+);
+
+router.post(
+  '/recover_password',
+  ValidatorMiddleware(ValidationType.body, {
+    token: Joi.string().required(),
+    password: Joi.string().min(6).max(32).required(),
+  }),
+  userControllerInstance.recoverPassword,
+);
+
 export default router;

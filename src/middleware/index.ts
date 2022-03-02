@@ -1,7 +1,7 @@
 import ErrorHandlingMiddleware from './errorHandlingMiddleware';
 import AuthMiddleware from './authMiddleware';
 import ValidatorMiddleware from './validatorMiddleware';
-import ServiceProviderMiddleware from './serviceProviderMiddleware';
+import UserRoleMiddleware from './userRoleMiddleware';
 import UploadImageMiddleware from './uploadImageMiddleware';
 
 export {
@@ -9,5 +9,5 @@ export {
   AuthMiddleware,
   ValidatorMiddleware,
   UploadImageMiddleware,
-  ServiceProviderMiddleware,
+  UserRoleMiddleware,
 };

@@ -2,13 +2,14 @@ import Router from '@koa/router';
 import {
   AuthMiddleware,
   ValidatorMiddleware,
-  ServiceProviderMiddleware,
+  UserRoleMiddleware,
   UploadImageMiddleware,
 } from 'middleware';
 import {container} from 'tsyringe';
 import Joi from 'joi';
 import RestaurantController from 'controllers/restaurantController';
 import {ValidationType} from 'middleware/validatorMiddleware';
+import {UserRole} from 'models/database/user';
 
 const router = new Router();
 const restaurantControllerInstance = container.resolve(RestaurantController);
@@ -16,7 +17,7 @@ const restaurantControllerInstance = container.resolve(RestaurantController);
 router.post(
   '/',
   AuthMiddleware,
-  ServiceProviderMiddleware,
+  UserRoleMiddleware(UserRole.serviceProvider),
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100).required(),
     description: Joi.string().min(10).required(),
@@ -32,7 +33,7 @@ router.post(
 router.patch(
   '/:id',
   AuthMiddleware,
-  ServiceProviderMiddleware,
+  UserRoleMiddleware(UserRole.serviceProvider),
   ValidatorMiddleware(ValidationType.link, {
     id: Joi.number().min(1).required(),
   }),
@@ -70,7 +71,7 @@ router.get(
 router.delete(
   '/:id',
   AuthMiddleware,
-  ServiceProviderMiddleware,
+  UserRoleMiddleware(UserRole.serviceProvider),
   ValidatorMiddleware(ValidationType.link, {
     id: Joi.number().min(1).required(),
   }),
@@ -80,7 +81,7 @@ router.delete(
 router.post(
   '/upload_image',
   AuthMiddleware,
-  ServiceProviderMiddleware,
+  UserRoleMiddleware(UserRole.serviceProvider),
   UploadImageMiddleware,
   restaurantControllerInstance.uploadImage,
 );

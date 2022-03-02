@@ -5,12 +5,14 @@ import {compareStrings, hash} from 'helpers/hash';
 import strings from 'strings';
 import {injectable} from 'tsyringe';
 import UserRepository from 'repositories/userRepository';
+import EmailService from './emailService';
 
 @injectable()
 class UserService {
   constructor(
     private tokenService: TokenService,
     private userRepository: UserRepository,
+    private emailService: EmailService,
   ) {}
 
   registration = async (email: string, password: string, role: string) => {
@@ -63,6 +65,36 @@ class UserService {
   refresh = async (userId: number, refreshToken: string) => {
     const data = await this.tokenService.refresh(userId, refreshToken);
     return data;
+  };
+
+  forgetPassword = async (email: string) => {
+    const token = this.tokenService.generateForgetPasswordToken(email);
+    this.emailService.sendForgetPasswordMail(email, token);
+    const user = await this.userRepository.findOneByCondition({email});
+    if (user) {
+      user.forget_password_token = token;
+      await this.userRepository.update(user);
+    }
+  };
+
+  recoverPassword = async (token: string, newPassword: string) => {
+    const decodedToken = this.tokenService.validateForgetPasswordToken(token);
+    if (!decodedToken) {
+      throw ApiError.unprocessableEntity(strings.user.tokenWasExpired);
+    }
+
+    const email = decodedToken.email;
+    const user = await this.userRepository.findOneByCondition({
+      forget_password_token: token,
+      email,
+    });
+
+    if (!user) {
+      throw ApiError.unprocessableEntity(strings.user.tokenWasExpired);
+    }
+
+    user.password = await hash(newPassword);
+    await this.userRepository.update(user);
   };
 }
 

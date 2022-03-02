@@ -2,11 +2,13 @@ import {Model} from 'objection';
 
 export interface IToken {
   refresh_token: string;
+  forget_password_token: string;
   userId: number;
 }
 
 export class Token extends Model implements IToken {
   refresh_token: string;
+  forget_password_token: string;
   userId: number;
 
   static get tableName() {
@@ -16,11 +18,12 @@ export class Token extends Model implements IToken {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['refresh_token', 'userId'],
+      required: ['userId'],
 
       properties: {
         id: {type: 'integer'},
         refresh_token: {type: 'string'},
+        forget_password_token: {type: 'string'},
         userId: {type: 'integer'},
       },
     };
