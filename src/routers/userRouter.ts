@@ -5,6 +5,7 @@ import {UserRole} from 'models/database/user';
 import {container} from 'tsyringe';
 import Joi from 'joi';
 import {ValidationType} from 'middleware/validatorMiddleware';
+import joiValidation from 'constants/joiValidation';
 
 const router = new Router();
 const userControllerInstance = container.resolve(UserController);
@@ -12,8 +13,8 @@ const userControllerInstance = container.resolve(UserController);
 router.post(
   '/registration',
   ValidatorMiddleware(ValidationType.body, {
-    email: Joi.string().email().lowercase().required(),
-    password: Joi.string().min(6).max(32).required(),
+    email: joiValidation.email,
+    password: joiValidation.password,
     role: Joi.string()
       .valid(...Object.values(UserRole).map((item) => item.toString()))
       .required(),
@@ -24,8 +25,8 @@ router.post(
 router.post(
   '/login',
   ValidatorMiddleware(ValidationType.body, {
-    email: Joi.string().email().lowercase().required(),
-    password: Joi.string().min(6).max(32).required(),
+    email: joiValidation.email,
+    password: joiValidation.password,
   }),
   userControllerInstance.login,
 );
@@ -44,7 +45,7 @@ router.post(
 router.post(
   '/forget_password',
   ValidatorMiddleware(ValidationType.body, {
-    email: Joi.string().email().lowercase().required(),
+    email: joiValidation.email,
   }),
   userControllerInstance.forgetPassword,
 );
@@ -53,7 +54,7 @@ router.post(
   '/recover_password',
   ValidatorMiddleware(ValidationType.body, {
     token: Joi.string().required(),
-    password: Joi.string().min(6).max(32).required(),
+    password: joiValidation.password,
   }),
   userControllerInstance.recoverPassword,
 );

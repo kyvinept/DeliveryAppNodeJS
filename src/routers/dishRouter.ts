@@ -11,6 +11,7 @@ import {ValidationType} from 'middleware/validatorMiddleware';
 import DishController from 'controllers/dishController';
 import {DishType} from 'models/dishType';
 import {UserRole} from 'models/database/user';
+import joiValidation from 'constants/joiValidation';
 
 const router = new Router();
 const dishControllerInstance = container.resolve(DishController);
@@ -70,10 +71,7 @@ router.get(
   ValidatorMiddleware(ValidationType.link, {
     restaurantId: Joi.number().min(1).required(),
   }),
-  ValidatorMiddleware(ValidationType.query, {
-    page: Joi.number().min(1).default(1),
-    per_page: Joi.number().min(1).default(10),
-  }),
+  ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
   dishControllerInstance.getAll,
 );
 

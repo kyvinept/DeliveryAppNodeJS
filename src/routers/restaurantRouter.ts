@@ -10,6 +10,7 @@ import Joi from 'joi';
 import RestaurantController from 'controllers/restaurantController';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import {UserRole} from 'models/database/user';
+import joiValidation from 'constants/joiValidation';
 
 const router = new Router();
 const restaurantControllerInstance = container.resolve(RestaurantController);
@@ -52,10 +53,7 @@ router.patch(
 router.get(
   '/',
   AuthMiddleware,
-  ValidatorMiddleware(ValidationType.query, {
-    page: Joi.number().min(1).default(1),
-    per_page: Joi.number().min(1).default(10),
-  }),
+  ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
   restaurantControllerInstance.getAll,
 );
 

@@ -10,6 +10,7 @@ import {ValidationType} from 'middleware/validatorMiddleware';
 import OrderController from 'controllers/orderController';
 import {UserRole} from 'models/database/user';
 import {OrderStatus} from 'models/orderStatus';
+import joiValidation from 'constants/joiValidation';
 
 const router = new Router();
 const orderControllerInstance = container.resolve(OrderController);
@@ -18,10 +19,7 @@ router.get(
   '/orders',
   AuthMiddleware,
   UserRoleMiddleware(UserRole.delivery),
-  ValidatorMiddleware(ValidationType.query, {
-    page: Joi.number().min(1).default(1),
-    per_page: Joi.number().min(1).default(10),
-  }),
+  ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
   orderControllerInstance.getAll,
 );
 
@@ -46,10 +44,7 @@ router.get(
   ValidatorMiddleware(ValidationType.link, {
     id: Joi.number().min(1).required(),
   }),
-  ValidatorMiddleware(ValidationType.query, {
-    page: Joi.number().min(1).default(1),
-    per_page: Joi.number().min(1).default(10),
-  }),
+  ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
   orderControllerInstance.getAllForRestaurant,
 );
 
