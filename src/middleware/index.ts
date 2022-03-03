@@ -3,6 +3,7 @@ import AuthMiddleware from './authMiddleware';
 import ValidatorMiddleware from './validatorMiddleware';
 import UserRoleMiddleware from './userRoleMiddleware';
 import UploadImageMiddleware from './uploadImageMiddleware';
+import ImageValidatorMiddleware from './imageValidatorMiddleware';
 
 export {
   ErrorHandlingMiddleware,
@@ -10,4 +11,5 @@ export {
   ValidatorMiddleware,
   UploadImageMiddleware,
   UserRoleMiddleware,
+  ImageValidatorMiddleware,
 };

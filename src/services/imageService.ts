@@ -23,6 +23,17 @@ class ImageService {
     return file.filename;
   };
 
+  checkIfImagesExist = async (imageUrls: string[], type: ImageType) => {
+    const names = imageUrls.map((url) => url.getImageName());
+    return await this.imageRepository.valuesExistIn(
+      {
+        key: 'original',
+        values: names,
+      },
+      {type},
+    );
+  };
+
   replaceImages = async (oldLinks: string[], newLinks: string[]) => {
     const linksToRemove = oldLinks.filter((item) => !newLinks.includes(item));
 
@@ -31,22 +42,22 @@ class ImageService {
     }
   };
 
-  delete = async (name: string) => {
+  getUrl = async (name: string) => {
+    const url = await minio.presignedGetObject(process.env.BUCKET_NAME, name);
+    return url;
+  };
+
+  private delete = async (link: string) => {
+    const name = link.getImageName();
+
     const image = await this.imageRepository.findOneByCondition({
       original: name,
     });
 
     if (image) {
-      console.log('Image was found and deleted');
-
       await this.deleteFromBucket(name);
       await this.imageRepository.delete(image);
     }
-  };
-
-  getUrl = async (name: string) => {
-    const url = await minio.presignedGetObject(process.env.BUCKET_NAME, name);
-    return url;
   };
 
   private configureNameFromMimetype = (mimetype: string) => {

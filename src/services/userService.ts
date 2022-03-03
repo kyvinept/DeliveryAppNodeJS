@@ -62,8 +62,8 @@ class UserService {
     return await this.tokenService.deleteToken(user.id);
   };
 
-  refresh = async (userId: number, refreshToken: string) => {
-    const data = await this.tokenService.refresh(userId, refreshToken);
+  refresh = async (refreshToken: string) => {
+    const data = await this.tokenService.refresh(refreshToken);
     return data;
   };
 

@@ -30,8 +30,8 @@ class UserController {
   };
 
   refresh = async (ctx: RouterContext, next: Koa.Next) => {
-    const {userId, refreshToken} = ctx.request.body;
-    const data = await this.userService.refresh(userId, refreshToken);
+    const {refreshToken} = ctx.request.body;
+    const data = await this.userService.refresh(refreshToken);
     ctx.body = {data};
   };
 

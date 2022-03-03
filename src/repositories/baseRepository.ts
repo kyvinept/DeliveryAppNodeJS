@@ -11,6 +11,11 @@ export interface JoinModel {
   whereParams?: Object;
 }
 
+export interface WhereInModel {
+  key: string;
+  values: string[];
+}
+
 export default class BaseRepository<T extends Model> {
   private type: typeof Model;
 
@@ -45,6 +50,16 @@ export default class BaseRepository<T extends Model> {
 
     countModel.first();
     return ((await countModel) as any).count;
+  };
+
+  valuesExistIn = async (whereInModel: WhereInModel, andWhereModel: Object) => {
+    const countModel = this.type
+      .query()
+      .count()
+      .whereIn(whereInModel.key, whereInModel.values)
+      .where(andWhereModel)
+      .first();
+    return ((await countModel) as any).count == whereInModel.values.length;
   };
 
   update = async (model: T) => {

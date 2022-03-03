@@ -4,6 +4,7 @@ import {
   ValidatorMiddleware,
   UserRoleMiddleware,
   UploadImageMiddleware,
+  ImageValidatorMiddleware,
 } from 'middleware';
 import {container} from 'tsyringe';
 import Joi from 'joi';
@@ -11,6 +12,7 @@ import RestaurantController from 'controllers/restaurantController';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import {UserRole} from 'models/database/user';
 import joiValidation from 'constants/joiValidation';
+import {ImageType} from 'models/imageType';
 
 const router = new Router();
 const restaurantControllerInstance = container.resolve(RestaurantController);
@@ -22,12 +24,10 @@ router.post(
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100).required(),
     description: Joi.string().min(10).required(),
-    images: Joi.array().items(Joi.string().uri()).min(1).required(),
-    location: Joi.object({
-      latitude: Joi.string().required(),
-      longitude: Joi.string().required(),
-    }).required(),
+    images: joiValidation.optionalImages.required(),
+    location: joiValidation.optionalLocation.required(),
   }),
+  ImageValidatorMiddleware(ImageType.restaurant),
   restaurantControllerInstance.create,
 );
 
@@ -41,12 +41,10 @@ router.patch(
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100),
     description: Joi.string().min(10),
-    images: Joi.array().items(Joi.string().uri()).min(1),
-    location: Joi.object({
-      latitude: Joi.string().required(),
-      longitude: Joi.string().required(),
-    }),
+    images: joiValidation.optionalImages,
+    location: joiValidation.optionalLocation,
   }),
+  ImageValidatorMiddleware(ImageType.restaurant),
   restaurantControllerInstance.update,
 );
 

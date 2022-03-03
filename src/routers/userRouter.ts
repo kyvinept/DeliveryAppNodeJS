@@ -37,7 +37,6 @@ router.post(
   '/refresh',
   ValidatorMiddleware(ValidationType.body, {
     refreshToken: Joi.string().required(),
-    userId: Joi.number().required(),
   }),
   userControllerInstance.refresh,
 );
