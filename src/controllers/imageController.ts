@@ -1,4 +1,5 @@
 import {RouterContext} from '@koa/router';
+import {getServerHost} from 'helpers/getServerHost';
 import Koa from 'koa';
 import {ImageType} from 'models/imageType';
 import ImageService from 'services/imageService';
@@ -18,7 +19,7 @@ class UserController {
 
     ctx.body = {
       data: {
-        url: ctx.protocol + '://' + ctx.request.header.host + '/' + url,
+        url: getServerHost(ctx) + url,
       },
     };
   };

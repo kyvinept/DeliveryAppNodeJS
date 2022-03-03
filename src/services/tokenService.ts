@@ -1,4 +1,3 @@
-import {compareStrings, hash} from 'helpers/hash';
 import ApiError from 'errors/ApiError';
 import jwt from 'jsonwebtoken';
 import {IUser} from 'models/database/user';
@@ -27,7 +26,7 @@ class TokenService {
   ) => {
     const tokenData = await this.tokenRepository.findOneByCondition({userId});
     if (tokenData) {
-      tokenData.refresh_token = await hash(refreshToken);
+      tokenData.refresh_token = refreshToken;
       await this.tokenRepository.update(tokenData);
       return tokenData;
     }
@@ -66,28 +65,25 @@ class TokenService {
   refresh = async (userId: number, refreshToken: string) => {
     const tokenData = await this.tokenRepository.findOneByCondition({
       userId,
+      refresh_token: refreshToken,
     });
 
-    if (tokenData) {
-      const isTokenMatched = compareStrings(
-        refreshToken,
-        tokenData.refresh_token,
-      );
-      const userData = this.validateRefreshToken(refreshToken) as IUser;
-
-      if (isTokenMatched && userData) {
-        const tokens = await this.generateTokensAndSave({
-          email: userData.email,
-          id: userData.id,
-          role: userData.role,
-        });
-        return tokens;
-      } else {
-        throw ApiError.unauthorized();
-      }
-    } else {
+    if (!tokenData) {
       throw ApiError.unauthorized();
     }
+
+    const userData = this.validateRefreshToken(refreshToken) as IUser;
+    if (!userData) {
+      throw ApiError.unauthorized();
+    }
+
+    const tokens = await this.generateTokensAndSave({
+      email: userData.email,
+      id: userData.id,
+      role: userData.role,
+    });
+
+    return tokens;
   };
 
   deleteToken = async (userId: number) => {

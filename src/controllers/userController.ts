@@ -3,6 +3,7 @@ import Koa from 'koa';
 import UserService from 'services/userService';
 import {singleton} from 'tsyringe';
 import strings from 'strings';
+import {getServerHost} from 'helpers/getServerHost';
 
 @singleton()
 class UserController {
@@ -36,7 +37,8 @@ class UserController {
 
   forgetPassword = async (ctx: RouterContext, next: Koa.Next) => {
     const {email} = ctx.request.body;
-    await this.userService.forgetPassword(email);
+    const baseLink = getServerHost(ctx);
+    await this.userService.forgetPassword(baseLink, email);
     ctx.body = {
       data: {
         message: strings.mail.emailHasBeenSent,

@@ -55,6 +55,7 @@ router.post(
   ValidatorMiddleware(ValidationType.body, {
     token: Joi.string().required(),
     password: joiValidation.password,
+    repeat_password: Joi.string().required().valid(Joi.ref('password')),
   }),
   userControllerInstance.recoverPassword,
 );

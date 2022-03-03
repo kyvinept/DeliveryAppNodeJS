@@ -22,11 +22,11 @@ class EmailService {
     });
   };
 
-  sendForgetPasswordMail = async (email: string, token: string) => {
+  sendForgetPasswordMail = async (email: string, link: string) => {
     await this.sendMail(
       email,
       strings.mail.forgetPasswordSubject,
-      strings.mail.forgetPasswordText(token),
+      strings.mail.forgetPasswordText(link),
     );
   };
 

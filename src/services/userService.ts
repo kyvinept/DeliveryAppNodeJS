@@ -67,9 +67,10 @@ class UserService {
     return data;
   };
 
-  forgetPassword = async (email: string) => {
+  forgetPassword = async (baseLink: string, email: string) => {
     const token = this.tokenService.generateForgetPasswordToken(email);
-    this.emailService.sendForgetPasswordMail(email, token);
+    const link = `${baseLink}?reset_token=${token}`;
+    this.emailService.sendForgetPasswordMail(email, link);
     const user = await this.userRepository.findOneByCondition({email});
     if (user) {
       user.forget_password_token = token;
@@ -94,6 +95,7 @@ class UserService {
     }
 
     user.password = await hash(newPassword);
+    user.forget_password_token = null;
     await this.userRepository.update(user);
   };
 }
