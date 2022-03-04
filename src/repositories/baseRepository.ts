@@ -41,9 +41,18 @@ export default class BaseRepository<T extends Model> {
     return (await this.type.query().insert(object)) as T;
   };
 
-  findOneByCondition = async (condition: Object) => {
-    const model = (await this.type.query().findOne(condition)) as T;
-    return model;
+  findOneByCondition = async (
+    condition: Object,
+    graphFetched: string = null,
+  ) => {
+    const query = this.type.query();
+    if (graphFetched) {
+      query.withGraphFetched(graphFetched);
+    }
+
+    query.findOne(condition);
+    const result = (await query) as unknown as T;
+    return result;
   };
 
   getAll = async (model: GetAllModel) => {

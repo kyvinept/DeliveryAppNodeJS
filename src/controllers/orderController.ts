@@ -69,7 +69,12 @@ class OrderController extends BaseController {
     const pageInt = parseInt(page as string);
     const perPageInt = parseInt(per_page as string);
 
-    const data = await this.orderService.getAll(pageInt, perPageInt);
+    let userId = null;
+    if (ctx.user.role == UserRole.user) {
+      userId = ctx.user.id;
+    }
+
+    const data = await this.orderService.getAll(pageInt, perPageInt, userId);
 
     ctx.body = this.paginationBody({
       data,

@@ -70,16 +70,26 @@ class OrderService {
     return data;
   };
 
-  getAll = async (page: number, perPage: number) => {
+  getAll = async (page: number, perPage: number, userId: number = null) => {
+    const whereModel = {} as any;
+    if (userId) {
+      whereModel.user_id = userId;
+    }
+
     const data = await this.orderRepository.getAllWithPagination({
       page,
       perPage,
+      whereModel,
+      graphFetched: OrderGraphFetched.dishes,
     });
     return data;
   };
 
   changeStatus = async (id: number, status: OrderStatus) => {
-    const order = await this.orderRepository.findOneByCondition({id});
+    const order = await this.orderRepository.findOneByCondition(
+      {id},
+      OrderGraphFetched.dishes,
+    );
     if (!order) {
       throw ApiError.unprocessableEntity(strings.order.orderNotFound);
     }

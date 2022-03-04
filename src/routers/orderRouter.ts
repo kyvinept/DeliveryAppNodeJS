@@ -18,7 +18,6 @@ const orderControllerInstance = container.resolve(OrderController);
 router.get(
   '/orders',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.delivery),
   ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
   orderControllerInstance.getAll,
 );
