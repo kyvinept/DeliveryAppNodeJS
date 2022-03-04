@@ -34,6 +34,10 @@ const en = {
     forgetPasswordText: (token: string) => `Recover there ${token}`,
     emailHasBeenSent: 'The mail with details has been successfully sent',
   },
+  chat: {
+    idsTheSame: 'You cannot create chat with your user id',
+    notFound: 'This chat was not found.',
+  },
 };
 
 export default en;

@@ -20,6 +20,7 @@ export interface GetAllModel {
   offset: number;
   limit: number;
   whereModel?: Object;
+  orWhereModel?: Object;
   graphFetched?: string;
 }
 
@@ -27,6 +28,7 @@ export interface GetAllWithPaginationModel {
   page: number;
   perPage: number;
   whereModel?: Object;
+  orWhereModel?: Object;
   graphFetched?: string;
 }
 
@@ -64,6 +66,10 @@ export default class BaseRepository<T extends Model> {
     condition.select();
     if (model.whereModel) {
       condition.where(model.whereModel);
+    }
+
+    if (model.orWhereModel) {
+      condition.orWhere(model.orWhereModel);
     }
 
     condition.offset(model.offset).limit(model.limit);
@@ -106,8 +112,7 @@ export default class BaseRepository<T extends Model> {
     const data = await this.getAll({
       offset: (model.page - 1) * model.perPage,
       limit: model.perPage,
-      whereModel: model.whereModel,
-      graphFetched: model.graphFetched,
+      ...model,
     });
     const totalCount = await this.getCount(model.whereModel);
     return {data, totalCount: parseInt(totalCount)};
