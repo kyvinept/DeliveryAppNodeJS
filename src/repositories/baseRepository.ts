@@ -16,6 +16,20 @@ export interface WhereInModel {
   values: string[];
 }
 
+export interface GetAllModel {
+  offset: number;
+  limit: number;
+  whereModel?: Object;
+  graphFetched?: string;
+}
+
+export interface GetAllWithPaginationModel {
+  page: number;
+  perPage: number;
+  whereModel?: Object;
+  graphFetched?: string;
+}
+
 export default class BaseRepository<T extends Model> {
   private type: typeof Model;
 
@@ -32,13 +46,18 @@ export default class BaseRepository<T extends Model> {
     return model;
   };
 
-  getAll = async (offset: number, limit: number, whereModel: Object = null) => {
-    const condition = this.type.query().select();
-    if (whereModel) {
-      condition.where(whereModel);
+  getAll = async (model: GetAllModel) => {
+    const condition = this.type.query();
+    if (model.graphFetched) {
+      condition.withGraphFetched(model.graphFetched);
     }
 
-    condition.offset(offset).limit(limit);
+    condition.select();
+    if (model.whereModel) {
+      condition.where(model.whereModel);
+    }
+
+    condition.offset(model.offset).limit(model.limit);
     return await condition;
   };
 
@@ -74,17 +93,14 @@ export default class BaseRepository<T extends Model> {
     return await model.$query().delete();
   };
 
-  getAllWithPagination = async (
-    page: number,
-    perPage: number,
-    whereCondition: Object = null,
-  ) => {
-    const data = await this.getAll(
-      (page - 1) * perPage,
-      perPage,
-      whereCondition,
-    );
-    const totalCount = await this.getCount(whereCondition);
+  getAllWithPagination = async (model: GetAllWithPaginationModel) => {
+    const data = await this.getAll({
+      offset: (model.page - 1) * model.perPage,
+      limit: model.perPage,
+      whereModel: model.whereModel,
+      graphFetched: model.graphFetched,
+    });
+    const totalCount = await this.getCount(model.whereModel);
     return {data, totalCount: parseInt(totalCount)};
   };
 

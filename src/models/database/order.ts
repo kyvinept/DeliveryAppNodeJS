@@ -12,6 +12,10 @@ export interface IOrder {
   user_id: number;
 }
 
+export enum OrderGraphFetched {
+  dishes = 'dishes',
+}
+
 export class Order extends Model implements IOrder {
   id: number;
   restaurant_id: number;
@@ -24,6 +28,25 @@ export class Order extends Model implements IOrder {
 
   static get tableName() {
     return 'Orders';
+  }
+
+  static get relationMappings() {
+    const {Dish} = require('./dish');
+
+    return {
+      dishes: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Dish,
+        join: {
+          from: 'Orders.id',
+          through: {
+            from: 'Restaurants_Orders.order_id',
+            to: 'Restaurants_Orders.dish_id',
+          },
+          to: 'Dishes.id',
+        },
+      },
+    };
   }
 
   static get jsonSchema() {

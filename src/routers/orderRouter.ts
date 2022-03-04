@@ -51,12 +51,13 @@ router.get(
 router.post(
   '/restaurants/:id/orders',
   AuthMiddleware,
+  UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100).required(),
     comment: Joi.string(),
     dish_ids: Joi.array().items(Joi.number()).min(1).required(),
     address: Joi.string().min(3).required(),
-    delivery_time: Joi.date(),
+    delivery_time: Joi.date().iso(),
   }),
   ValidatorMiddleware(ValidationType.link, {
     id: Joi.number().min(1).required(),

@@ -4,6 +4,7 @@ import {injectable} from 'tsyringe';
 import OrderRepository from 'repositories/orderRepository';
 import RestaurantOrderRepository from 'repositories/restaurantOrderRepository';
 import {OrderStatus} from 'models/orderStatus';
+import {OrderGraphFetched} from 'models/database/order';
 
 export interface OrderModel {
   restaurantId: number;
@@ -28,7 +29,7 @@ class OrderService {
       name: model.name,
       comment: model.comment,
       address: model.address,
-      delivery_time: model.deliveryTime,
+      delivery_time: model.deliveryTime.toISOString(),
       user_id: model.userId,
     });
 
@@ -54,21 +55,26 @@ class OrderService {
     restaurantId: number,
     userId: number = null,
   ) => {
-    const whereCondition = {restaurant_id: restaurantId} as any;
+    const whereModel = {restaurant_id: restaurantId} as any;
     if (userId) {
-      whereCondition.user_id = userId;
+      whereModel.user_id = userId;
     }
 
-    const data = await this.orderRepository.getAllWithPagination(
+    const data = await this.orderRepository.getAllWithPagination({
       page,
       perPage,
-      whereCondition,
-    );
+      whereModel,
+      graphFetched: OrderGraphFetched.dishes,
+    });
+
     return data;
   };
 
   getAll = async (page: number, perPage: number) => {
-    const data = await this.orderRepository.getAllWithPagination(page, perPage);
+    const data = await this.orderRepository.getAllWithPagination({
+      page,
+      perPage,
+    });
     return data;
   };
 

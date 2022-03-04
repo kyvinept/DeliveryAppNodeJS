@@ -13,9 +13,11 @@ class OrderController extends BaseController {
 
   create = async (ctx: RouterContext, next: Koa.Next) => {
     const {name, comment, dish_ids, address, delivery_time} = ctx.request.body;
+
     const {id} = ctx.params;
     const idInt = parseInt(id);
     const userId = ctx.user.id;
+
     const data = await this.orderService.create({
       restaurantId: idInt,
       name,
@@ -41,7 +43,6 @@ class OrderController extends BaseController {
     const {page, per_page} = ctx.query;
     const pageInt = parseInt(page as string);
     const perPageInt = parseInt(per_page as string);
-
     const restaurantId = parseInt(ctx.params.id);
 
     let userId = null;

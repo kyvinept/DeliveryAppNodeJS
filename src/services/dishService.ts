@@ -128,12 +128,12 @@ class DishService {
     perPage: number,
     restaurantId: number,
   ) => {
-    const whereCondition = {restaurant_id: restaurantId};
-    const data = await this.dishRepository.getAllWithPagination(
+    const whereModel = {restaurant_id: restaurantId};
+    const data = await this.dishRepository.getAllWithPagination({
       page,
       perPage,
-      whereCondition,
-    );
+      whereModel,
+    });
     return data;
   };
 }

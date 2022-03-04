@@ -97,10 +97,10 @@ class RestaurantService {
   };
 
   getAll = async (page: number, perPage: number) => {
-    const data = await this.restaurantRepository.getAllWithPagination(
+    const data = await this.restaurantRepository.getAllWithPagination({
       page,
       perPage,
-    );
+    });
 
     return data;
   };

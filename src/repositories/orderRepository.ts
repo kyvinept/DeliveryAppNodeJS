@@ -1,4 +1,4 @@
-import {Dish, Order} from 'models/database';
+import {Order} from 'models/database';
 import {injectable} from 'tsyringe';
 import BaseRepository from './baseRepository';
 
