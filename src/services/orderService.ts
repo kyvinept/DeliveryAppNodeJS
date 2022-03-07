@@ -5,6 +5,8 @@ import OrderRepository from 'repositories/orderRepository';
 import RestaurantOrderRepository from 'repositories/restaurantOrderRepository';
 import {OrderStatus} from 'models/orderStatus';
 import {OrderGraphFetched} from 'models/database/order';
+import StorageManager from 'storage/storageManager';
+import {Location} from 'models/location';
 
 export interface OrderModel {
   restaurantId: number;
@@ -16,11 +18,17 @@ export interface OrderModel {
   userId: number;
 }
 
+export interface LocationGetModel {
+  location: Location;
+  time: Date;
+}
+
 @injectable()
 class OrderService {
   constructor(
     private orderRepository: OrderRepository,
     private restaurantOrderRepository: RestaurantOrderRepository,
+    private storageManager: StorageManager,
   ) {}
 
   create = async (model: OrderModel) => {
@@ -82,6 +90,7 @@ class OrderService {
       whereModel,
       graphFetched: OrderGraphFetched.dishes,
     });
+
     return data;
   };
 
@@ -97,6 +106,33 @@ class OrderService {
     order.status = status;
     await this.orderRepository.update(order);
     return order;
+  };
+
+  addLocation = async (key: string, location: Location, time?: Date) => {
+    const locationString = `latitude=${location.latitude};longitude=${location.longitude}`;
+    await this.storageManager.set(
+      key,
+      (time || new Date()).getTime().toString(),
+      locationString,
+    );
+  };
+
+  getAllLocations = async (key: string) => {
+    const object = await this.storageManager.get(key);
+    let locationGetModels: LocationGetModel[] = [];
+
+    for (const [time, value] of Object.entries(object)) {
+      const splitedLocationString = value.split(';');
+      locationGetModels.push({
+        time: new Date(parseInt(time)),
+        location: {
+          latitude: splitedLocationString[0].split('=')[1],
+          longitude: splitedLocationString[1].split('=')[1],
+        },
+      });
+    }
+
+    return locationGetModels;
   };
 }
 

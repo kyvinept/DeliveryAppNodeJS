@@ -46,6 +46,11 @@ const en = {
     successfullyLeavedChat: 'You have successfully leaved to chat',
     messageSaved: 'Message saved',
   },
+  locationSocket: {
+    subscribedToOrder:
+      'You have successfully subscribed to order for checking delivery updates.',
+    unsubscribedToOrder: 'You have successfully unsubscribed from order.',
+  },
 };
 
 export default en;

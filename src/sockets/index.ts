@@ -4,10 +4,27 @@ import {OnEventType} from './EventType';
 import {ChatSocketServer} from './chatSocketServer';
 import {container, injectable} from 'tsyringe';
 import {SocketAuthMiddleware} from 'middleware';
+import {LocationSocketServer} from './locationSocketServer';
 
 enum RouteType {
-  sockets = '/api/sockets',
+  chats = '/api/chats',
+  locations = '/api/locations',
 }
+
+const instanceForRouteType = (routeType: RouteType, socket: Socket) => {
+  switch (routeType) {
+    case RouteType.chats:
+      const chatSocketServerInstance = container.resolve(ChatSocketServer);
+      chatSocketServerInstance.configure(socket);
+      break;
+
+    case RouteType.locations:
+      const locationSocketServerInstance =
+        container.resolve(LocationSocketServer);
+      locationSocketServerInstance.configure(socket);
+      break;
+  }
+};
 
 @injectable()
 export class SocketServer {
@@ -15,18 +32,22 @@ export class SocketServer {
 
   configure = (httpServer: Server) => {
     const io = new SocketIOServer(httpServer);
-    io.of(RouteType.sockets)
-      .use(SocketAuthMiddleware)
-      .on(OnEventType.connection, this.onConnection);
+
+    const routeTypes = Object.values(RouteType);
+    routeTypes.forEach((type) => {
+      io.of(type)
+        .use(SocketAuthMiddleware)
+        .on(OnEventType.connection, this.onConnection(type));
+    });
   };
 
-  private onConnection = (socket: Socket) => {
-    const chatSocketServerInstance = container.resolve(ChatSocketServer);
-    chatSocketServerInstance.configure(socket);
+  private onConnection = (routeType: RouteType) => {
+    return (socket: Socket) => {
+      instanceForRouteType(routeType, socket);
 
-    this.setTimer(socket);
-
-    socket.on(OnEventType.disconnect, this.onDisconnect);
+      this.setTimer(socket);
+      socket.on(OnEventType.disconnect, this.onDisconnect);
+    };
   };
 
   private onDisconnect = () => {

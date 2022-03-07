@@ -5,10 +5,12 @@ import './src/extensions';
 import {Model} from 'objection';
 import connection from 'configs/knex';
 import {listen} from './app';
+import {initStorage} from 'storage';
 
 const PORT = process.env.PORT;
 
 Model.knex(connection);
+initStorage();
 
 const start = async () => {
   try {

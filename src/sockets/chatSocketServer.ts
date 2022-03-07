@@ -2,15 +2,14 @@ import {Socket} from 'socket.io';
 import {injectable} from 'tsyringe';
 import {CommonEventType, OnEventType} from './EventType';
 import strings from 'strings';
-import {SubscribeToChat} from './interfaces/subscribeToChat';
-import {UnsubscribeFromChat} from './interfaces/unsubscribeFromChat';
 import {
   MessageCreateModel,
   MessageDeleteModel,
   MessageEditModel,
+  ChatSubscribe,
+  ChatUnsubscribe,
 } from './interfaces/messageModels';
 import MessageService from 'services/messageService';
-import Joi from 'joi';
 import joiValidation from 'constants/joiValidation';
 import {BaseSocketServer} from './baseSocketServer';
 
@@ -27,25 +26,33 @@ export class ChatSocketServer extends BaseSocketServer {
   configure = (socket: Socket) => {
     this.socket = socket;
 
-    socket.on(OnEventType.subscribeToChat, this.subscribeToChat);
-    socket.on(OnEventType.unsubscribeFromChat, this.unsubscribeFromChat);
+    socket.on(OnEventType.chatSubscribe, this.chatSubscribe);
+    socket.on(OnEventType.chatUnsubscribe, this.chatUnsubscribe);
     socket.on(CommonEventType.messageCreate, this.messageCreate);
     socket.on(CommonEventType.messageEdit, this.messageEdit);
     socket.on(CommonEventType.messageDelete, this.messageDelete);
   };
 
-  private subscribeToChat = (data: SubscribeToChat) => {
-    this.validate({chat_id: joiValidation.id}, data).then(() => {
-      this.socket.join(this.roomName(data.chat_id));
-      this.inform(strings.chatSocket.successfullyJoinedChat);
-    });
+  private chatSubscribe = (data: ChatSubscribe) => {
+    this.validate({chat_id: joiValidation.id}, data)
+      .then(() => {
+        this.socket.join(this.roomName(data.chat_id));
+        this.inform(strings.chatSocket.successfullyJoinedChat);
+      })
+      .catch((e) => {
+        this.error(e);
+      });
   };
 
-  private unsubscribeFromChat = (data: UnsubscribeFromChat) => {
-    this.validate({chat_id: joiValidation.id}, data).then(() => {
-      this.socket.leave(this.roomName(data.chat_id));
-      this.inform(strings.chatSocket.successfullyLeavedChat);
-    });
+  private chatUnsubscribe = (data: ChatUnsubscribe) => {
+    this.validate({chat_id: joiValidation.id}, data)
+      .then(() => {
+        this.socket.leave(this.roomName(data.chat_id));
+        this.inform(strings.chatSocket.successfullyLeavedChat);
+      })
+      .catch((e) => {
+        this.error(e);
+      });
   };
 
   private messageCreate = async (data: MessageCreateModel) => {

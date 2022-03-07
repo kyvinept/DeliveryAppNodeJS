@@ -30,7 +30,8 @@
     "repositories": "src/repositories",
     "configs": "src/configs",
     "constants": "src/constants",
-    "sockets": "src/sockets"
+    "sockets": "src/sockets",
+    "storage": "src/storage"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -74,6 +75,7 @@
     "objection": "^3.0.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
+    "redis": "^4.0.4",
     "reflect-metadata": "^0.1.13",
     "socket.io": "^4.4.1",
     "tsyringe": "^4.6.0",

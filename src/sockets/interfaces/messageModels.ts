@@ -12,3 +12,11 @@ export interface MessageEditModel {
 export interface MessageDeleteModel {
   id: number;
 }
+
+export interface ChatSubscribe {
+  chat_id: number;
+}
+
+export interface ChatUnsubscribe {
+  chat_id: number;
+}
