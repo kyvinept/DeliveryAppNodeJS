@@ -8,11 +8,13 @@ import routers from './src/routers';
 import imageRouter from './src/routers/imageRouter';
 import {SocketServer} from './src/sockets';
 import {createServer} from 'http';
+import {container} from 'tsyringe';
 
 const app = new Koa();
 const router = new Router();
 const httpServer = createServer(app.callback());
-const socketServer = new SocketServer(httpServer);
+const socketServerInstance = container.resolve(SocketServer);
+socketServerInstance.configure(httpServer);
 
 router.use('/api', routers.routes());
 router.use(imageRouter.routes());

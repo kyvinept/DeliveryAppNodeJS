@@ -1,30 +1,42 @@
-import {Server as SocketIOServer} from 'socket.io';
+import {Server as SocketIOServer, Socket} from 'socket.io';
 import {Server} from 'http';
+import {OnEventType} from './EventType';
+import {ChatSocketServer} from './chatSocketServer';
+import {container, injectable} from 'tsyringe';
+import {SocketAuthMiddleware} from 'middleware';
 
-export interface SocketUser {
-  socketId: string;
-  userId: number;
+enum RouteType {
+  sockets = '/api/sockets',
 }
 
+@injectable()
 export class SocketServer {
-  users: SocketUser[];
+  private timer = null;
 
-  constructor(httpServer: Server) {
+  configure = (httpServer: Server) => {
     const io = new SocketIOServer(httpServer);
+    io.of(RouteType.sockets)
+      .use(SocketAuthMiddleware)
+      .on(OnEventType.connection, this.onConnection);
+  };
 
-    io.of('/api/sockets').on('connection', (socket) => {
-      console.log('socket is ready for connection', socket.data);
-      socket.on('identify', (userId) => {
-        this.users.push({
-          socketId: socket.id,
-          userId: userId,
-        });
-      });
+  private onConnection = (socket: Socket) => {
+    const chatSocketServerInstance = container.resolve(ChatSocketServer);
+    chatSocketServerInstance.configure(socket);
 
-      socket.on('disconnect', () => {
-        console.log('disconnect');
-        this.users = this.users.filter((user) => user.socketId !== socket.id);
-      });
-    });
-  }
+    this.setTimer(socket);
+
+    socket.on(OnEventType.disconnect, this.onDisconnect);
+  };
+
+  private onDisconnect = () => {
+    console.log('disconnect');
+    clearTimeout(this.timer);
+  };
+
+  private setTimer = (socket: Socket) => {
+    const expiresIn = (socket.data.user.exp - Date.now() / 1000) * 1000;
+    console.log(expiresIn / 1000 / 60);
+    this.timer = setTimeout(() => socket.disconnect(true), expiresIn);
+  };
 }

@@ -29,7 +29,8 @@
     "strings": "src/strings",
     "repositories": "src/repositories",
     "configs": "src/configs",
-    "constants": "src/constants"
+    "constants": "src/constants",
+    "sockets": "src/sockets"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

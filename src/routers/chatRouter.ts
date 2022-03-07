@@ -16,7 +16,7 @@ router.post(
     name: Joi.string().min(2).max(100).required(),
   }),
   ValidatorMiddleware(ValidationType.link, {
-    user_id: Joi.number().min(1).required(),
+    user_id: joiValidation.id,
   }),
   chatControllerInstance.create,
 );
@@ -26,6 +26,15 @@ router.get(
   AuthMiddleware,
   ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
   chatControllerInstance.getAll,
+);
+
+router.delete(
+  '/chats/:id',
+  AuthMiddleware,
+  ValidatorMiddleware(ValidationType.link, {
+    id: joiValidation.id,
+  }),
+  chatControllerInstance.delete,
 );
 
 export default router;

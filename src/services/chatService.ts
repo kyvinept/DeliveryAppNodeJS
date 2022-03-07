@@ -41,6 +41,19 @@ class ChatService {
 
     return chats;
   };
+
+  delete = async (chatId: number, userId: number) => {
+    const chat = await this.chatRepository.findOneByCondition({id: chatId});
+    if (!chat) {
+      throw ApiError.notFound(strings.chat.notFound);
+    }
+
+    if (!(chat.owner_id == userId || chat.user_id == userId)) {
+      throw ApiError.forbidden();
+    }
+
+    await this.chatRepository.delete(chat);
+  };
 }
 
 export default ChatService;

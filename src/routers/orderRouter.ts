@@ -56,7 +56,7 @@ router.post(
     comment: Joi.string(),
     dish_ids: Joi.array().items(Joi.number()).min(1).required(),
     address: Joi.string().min(3).required(),
-    delivery_time: Joi.date().iso(),
+    delivery_time: joiValidation.optionalDate,
   }),
   ValidatorMiddleware(ValidationType.link, {
     id: Joi.number().min(1).required(),

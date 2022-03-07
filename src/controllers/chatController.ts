@@ -40,6 +40,16 @@ class ChatController extends BaseController {
       perPage: perPageInt,
     });
   };
+
+  delete = async (ctx: RouterContext, next: Koa.Next) => {
+    const chatId = ctx.params.id;
+    const chatIdInt = parseInt(chatId);
+    const userId = ctx.user.id;
+
+    await this.chatService.delete(chatIdInt, userId);
+
+    ctx.body = {};
+  };
 }
 
 export default ChatController;

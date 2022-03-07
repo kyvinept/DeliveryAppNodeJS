@@ -13,7 +13,11 @@ export async function up(knex: Knex): Promise<void> {
       table.increments('id').primary();
       table.string('message');
       table.datetime('date');
-      table.integer('chat_id').references('id').inTable('Chats');
+      table
+        .integer('chat_id')
+        .references('id')
+        .inTable('Chats')
+        .onDelete('CASCADE');
       table.integer('owner_id').references('id').inTable('Users');
       table.timestamps(true, true);
     });

@@ -12,4 +12,7 @@ export default {
     latitude: Joi.string().required(),
     longitude: Joi.string().required(),
   }),
+  optionalDate: Joi.date().iso(),
+  id: Joi.number().min(1).required(),
+  requiredString: Joi.string().min(1).required(),
 };

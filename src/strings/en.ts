@@ -38,6 +38,14 @@ const en = {
     idsTheSame: 'You cannot create chat with your user id',
     notFound: 'This chat was not found.',
   },
+  message: {
+    notFound: 'This message was not found.',
+  },
+  chatSocket: {
+    successfullyJoinedChat: 'You have successfully joined to chat',
+    successfullyLeavedChat: 'You have successfully leaved to chat',
+    messageSaved: 'Message saved',
+  },
 };
 
 export default en;
