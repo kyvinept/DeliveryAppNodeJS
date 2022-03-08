@@ -7,6 +7,7 @@ import {Order} from './order';
 import {RestaurantsOrders} from './restaurant_order';
 import {Chat} from './chat';
 import {Message} from './message';
+import {Comment} from './comment';
 
 export {
   User,
@@ -18,4 +19,5 @@ export {
   RestaurantsOrders,
   Chat,
   Message,
+  Comment,
 };

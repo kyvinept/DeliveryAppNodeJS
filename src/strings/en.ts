@@ -51,6 +51,9 @@ const en = {
       'You have successfully subscribed to order for checking delivery updates.',
     unsubscribedToOrder: 'You have successfully unsubscribed from order.',
   },
+  comment: {
+    notFound: 'This comment was not found.',
+  },
 };
 
 export default en;
