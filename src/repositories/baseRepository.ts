@@ -20,6 +20,7 @@ export interface GetAllModel {
   offset: number;
   limit: number;
   whereModel?: Object;
+  whereNotModel?: Object;
   orWhereModel?: Object;
   graphFetched?: string;
 }
@@ -28,6 +29,7 @@ export interface GetAllWithPaginationModel {
   page: number;
   perPage: number;
   whereModel?: Object;
+  whereNotModel?: Object;
   orWhereModel?: Object;
   graphFetched?: string;
 }
@@ -66,6 +68,10 @@ export default class BaseRepository<T extends Model> {
     condition.select();
     if (model.whereModel) {
       condition.where(model.whereModel);
+    }
+
+    if (model.whereNotModel) {
+      condition.whereNot(model.whereNotModel);
     }
 
     if (model.orWhereModel) {

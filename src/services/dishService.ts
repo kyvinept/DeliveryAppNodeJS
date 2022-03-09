@@ -123,6 +123,16 @@ class DishService {
     return dish;
   };
 
+  getFullPrice = async (ids: number[]) => {
+    const prices = await this.dishRepository.getPrices(ids);
+    let fullPrice = 0;
+    prices.forEach((item) => {
+      fullPrice += item.price;
+    });
+
+    return fullPrice;
+  };
+
   getAllForRestaurant = async (
     page: number,
     perPage: number,

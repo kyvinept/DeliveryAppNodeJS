@@ -62,7 +62,7 @@ export class Order extends Model implements IOrder {
         delivery_time: {type: 'string'},
         restaurant_id: {type: 'integer'},
         user_id: {type: 'integer'},
-        status: {type: 'string', default: OrderStatus.new},
+        status: {type: 'string', default: OrderStatus.waitingForPayment},
       },
     };
   }

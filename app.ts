@@ -9,6 +9,7 @@ import imageRouter from './src/routers/imageRouter';
 import {SocketServer} from './src/sockets';
 import {createServer} from 'http';
 import {container} from 'tsyringe';
+import StripeService from 'services/stripeService';
 
 const app = new Koa();
 const router = new Router();
@@ -26,7 +27,8 @@ app.use(ErrorHandlingMiddleware);
 app.use(router.routes()).use(router.allowedMethods());
 
 export const listen = (port: string) => {
-  httpServer.listen(port, () =>
-    console.log('server has been started on port ' + port),
-  );
+  httpServer.listen(port, () => {
+    console.log('server has been started on port ' + port);
+    new StripeService();
+  });
 };

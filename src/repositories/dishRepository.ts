@@ -10,6 +10,11 @@ export default class DishRepository extends BaseRepository<Dish> {
     super(Dish);
   }
 
+  getPrices = async (ids: number[]) => {
+    const prices = await Dish.query().select('price').whereIn('id', ids);
+    return prices;
+  };
+
   joinRestaurantsToGetOwnerId = async (id: number) => {
     const dishes = await this.join({
       joinParams: {

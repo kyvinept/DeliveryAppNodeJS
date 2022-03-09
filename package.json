@@ -79,6 +79,7 @@
     "redis": "^4.0.4",
     "reflect-metadata": "^0.1.13",
     "socket.io": "^4.4.1",
+    "stripe": "^8.207.0",
     "tsyringe": "^4.6.0",
     "uuid": "^8.3.2",
     "validator": "^13.7.0"

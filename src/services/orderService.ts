@@ -1,12 +1,15 @@
 import ApiError from 'errors/ApiError';
 import strings from 'strings';
-import {injectable} from 'tsyringe';
+import {delay, inject, injectable} from 'tsyringe';
 import OrderRepository from 'repositories/orderRepository';
 import RestaurantOrderRepository from 'repositories/restaurantOrderRepository';
 import {OrderStatus} from 'models/orderStatus';
 import {OrderGraphFetched} from 'models/database/order';
 import StorageManager from 'storage/storageManager';
 import {Location} from 'models/location';
+import PaymentService from './paymentService';
+import {IUser} from 'models/database/user';
+import DishService from './dishService';
 
 export interface OrderModel {
   restaurantId: number;
@@ -15,7 +18,6 @@ export interface OrderModel {
   dishIds: number[];
   address: string;
   deliveryTime?: Date;
-  userId: number;
 }
 
 export interface LocationGetModel {
@@ -29,16 +31,18 @@ class OrderService {
     private orderRepository: OrderRepository,
     private restaurantOrderRepository: RestaurantOrderRepository,
     private storageManager: StorageManager,
+    @inject(delay(() => PaymentService)) private paymentService: PaymentService,
+    private dishService: DishService,
   ) {}
 
-  create = async (model: OrderModel) => {
+  create = async (model: OrderModel, user: IUser) => {
     const order = await this.orderRepository.create({
       restaurant_id: model.restaurantId,
       name: model.name,
       comment: model.comment,
       address: model.address,
       delivery_time: model.deliveryTime.toISOString(),
-      user_id: model.userId,
+      user_id: user.id,
     });
 
     for (let index = 0; index < model.dishIds.length; index++) {
@@ -49,7 +53,14 @@ class OrderService {
       });
     }
 
-    return {...order, dish_ids: model.dishIds};
+    const price = await this.dishService.getFullPrice(model.dishIds);
+    const payment = await this.paymentService.createPayment(
+      user,
+      order.id,
+      price,
+    );
+
+    return {order: {...order, dish_ids: model.dishIds}, payment};
   };
 
   delete = async (id: number) => {
@@ -133,6 +144,12 @@ class OrderService {
     }
 
     return locationGetModels;
+  };
+
+  changeStatusAfterPayment = async (id: number) => {
+    const order = await this.orderRepository.findOneByCondition({id});
+    order.status = OrderStatus.new;
+    await this.orderRepository.update(order);
   };
 }
 

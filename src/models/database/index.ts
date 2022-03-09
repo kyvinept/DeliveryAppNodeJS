@@ -8,6 +8,7 @@ import {RestaurantsOrders} from './restaurant_order';
 import {Chat} from './chat';
 import {Message} from './message';
 import {Comment} from './comment';
+import {Payment} from './payment';
 
 export {
   User,
@@ -20,4 +21,5 @@ export {
   Chat,
   Message,
   Comment,
+  Payment,
 };

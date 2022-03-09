@@ -16,17 +16,19 @@ class OrderController extends BaseController {
 
     const {id} = ctx.params;
     const idInt = parseInt(id);
-    const userId = ctx.user.id;
+    const user = ctx.user;
 
-    const data = await this.orderService.create({
-      restaurantId: idInt,
-      name,
-      comment,
-      dishIds: dish_ids,
-      address,
-      deliveryTime: delivery_time,
-      userId,
-    });
+    const data = await this.orderService.create(
+      {
+        restaurantId: idInt,
+        name,
+        comment,
+        dishIds: dish_ids,
+        address,
+        deliveryTime: delivery_time,
+      },
+      user,
+    );
 
     ctx.status = 201;
     ctx.body = {data};

@@ -54,6 +54,10 @@ const en = {
   comment: {
     notFound: 'This comment was not found.',
   },
+  payment: {
+    notFound: 'This payment was not found',
+    notConfirmed: 'This payment is still waiting for payment.',
+  },
 };
 
 export default en;
