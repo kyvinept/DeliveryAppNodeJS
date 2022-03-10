@@ -18,7 +18,7 @@ class UserService {
   registration = async (email: string, password: string, role: string) => {
     const user = await this.userRepository.findOneByCondition({email});
     if (user) {
-      throw ApiError.badRequest(strings.user.emailAlreadyInUse);
+      throw ApiError.unprocessableEntity(strings.user.emailAlreadyInUse);
     }
 
     const hashedPassword = await hash(password);
@@ -41,12 +41,12 @@ class UserService {
     const user = await this.userRepository.findOneByCondition({email});
 
     if (!user) {
-      throw ApiError.badRequest(strings.user.isNotRegistered);
+      throw ApiError.notFound(strings.user.isNotRegistered);
     }
 
     const comparePassword = compareStrings(password, user.password);
     if (!comparePassword) {
-      throw ApiError.badRequest(strings.user.wrongPassword);
+      throw ApiError.unprocessableEntity(strings.user.wrongPassword);
     }
 
     const tokens = await this.tokenService.generateTokensAndSave({

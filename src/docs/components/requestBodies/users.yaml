@@ -1,0 +1,39 @@
+Login:
+  description: Body to log in
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/users.yaml#/Login'
+
+Registration:
+  description: Body to sign up
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/users.yaml#/Registration'
+
+Refresh:
+  description: Body to refresh
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/users.yaml#/Email'
+
+ForgetPassword:
+  description: Body to forget password
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/users.yaml#/Email'
+
+RecoverPassword:
+  description: Body to recover password
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/users.yaml#/RecoverPassword'

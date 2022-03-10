@@ -1,0 +1,33 @@
+type: object
+properties:
+  data:
+    type: object
+    properties:
+      message:
+        type: string
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            message:
+              type: string
+            path:
+              type: array
+              items:
+                type: string
+            type:
+              type: string
+            context:
+              type: object
+              properties:
+                value:
+                  type: string
+                invalids:
+                  type: array
+                  items:
+                    type: string
+                label:
+                  type: string
+                key:
+                  type: string

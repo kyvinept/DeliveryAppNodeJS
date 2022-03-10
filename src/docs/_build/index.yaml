@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in HTML.
+  version: 0.0.1
+servers:
+  - url: 'http://localhost:3000/api'
+    description: Test server
+paths:
+  /login:
+    post:
+      summary: Login
+      tags:
+        - auth
+      requestBody:
+        description: Body to log in
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Success login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                      refreshToken:
+                        type: string
+        '404':
+          description: User was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      errors:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            path:
+                              type: array
+                              items:
+                                type: string
+                            type:
+                              type: string
+                            context:
+                              type: object
+                              properties:
+                                value:
+                                  type: string
+                                invalids:
+                                  type: array
+                                  items:
+                                    type: string
+                                label:
+                                  type: string
+                                key:
+                                  type: string
+  /registration:
+    post:
+      summary: Registration
+      tags:
+        - auth
+      requestBody:
+        description: Body to sign up
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  default: 'USER, DELIVERY, SERVICE_PROVIDER'
+              required:
+                - email
+                - password
+                - role
+      responses:
+        '200':
+          $ref: '#/paths/~1login/post/responses/200'
+        '422':
+          $ref: '#/paths/~1login/post/responses/422'
+  /logout:
+    post:
+      summary: Logout
+      tags:
+        - auth
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User is not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1login/post/responses/404/content/application~1json/schema'
+        '422':
+          $ref: '#/paths/~1login/post/responses/422'
+  /refresh:
+    post:
+      summary: Refresh
+      tags:
+        - auth
+      requestBody:
+        description: Body to refresh
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+      responses:
+        '200':
+          $ref: '#/paths/~1login/post/responses/200'
+        '401':
+          $ref: '#/paths/~1logout/post/responses/401'
+        '422':
+          $ref: '#/paths/~1login/post/responses/422'
+  /forget_password:
+    post:
+      summary: Forget password
+      tags:
+        - auth
+      requestBody:
+        description: Body to forget password
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1refresh/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1login/post/responses/404/content/application~1json/schema'
+        '422':
+          $ref: '#/paths/~1login/post/responses/422'
+  /recover_password:
+    post:
+      summary: Recover password
+      tags:
+        - auth
+      requestBody:
+        description: Body to recover password
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                repeat_password:
+                  type: string
+              required:
+                - token
+                - password
+                - repeat_password
+      responses:
+        '200':
+          $ref: '#/paths/~1logout/post/responses/200'
+        '422':
+          $ref: '#/paths/~1login/post/responses/422'
