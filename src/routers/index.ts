@@ -17,6 +17,6 @@ router.use(messageRouter.routes());
 router.use(commentRouter.routes());
 router.use(paymentRouter.routes());
 router.use('/restaurants', restaurantRouter.routes());
-router.use('/restaurants/:restaurantId/dishes', dishRouter.routes());
+router.use(dishRouter.routes());
 
 export default router;

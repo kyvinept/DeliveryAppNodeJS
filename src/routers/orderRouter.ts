@@ -15,6 +15,108 @@ import joiValidation from 'constants/joiValidation';
 const router = new Router();
 const orderControllerInstance = container.resolve(OrderController);
 
+/**
+ * @openapi
+ * /orders:
+ *   get:
+ *     summary: Get orders
+ *     tags:
+ *      - order
+ *     parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *      - in: query
+ *        name: per_page
+ *        schema:
+ *          type: integer
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: integer
+ *                      name:
+ *                        type: string
+ *                      comment:
+ *                        type: string
+ *                      address:
+ *                        type: string
+ *                      delivery_time:
+ *                        type: date
+ *                        example: 2022-03-03T17:11:25.917Z
+ *                      restaurant_id:
+ *                        type: integer
+ *                      status:
+ *                        type: string
+ *                        example: waiting_for_payment|new|took_order|delivering|done
+ *                      user_id:
+ *                        type: integer
+ *                      dishes:
+ *                        type: array
+ *                        items:
+ *                          type: object
+ *                          properties:
+ *                            id:
+ *                              type: integer
+ *                            name:
+ *                              type: string
+ *                            description:
+ *                              type: string
+ *                            price:
+ *                              type: integer
+ *                            images:
+ *                              type: array
+ *                              items:
+ *                                type: string
+ *                            restaurant_id:
+ *                              type: integer
+ *                            type:
+ *                              type: string
+ *                              example: new|regular
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.get(
   '/orders',
   AuthMiddleware,
@@ -22,6 +124,266 @@ router.get(
   orderControllerInstance.getAll,
 );
 
+/**
+ * @openapi
+ * /restaurants/{restaurant_id}/orders:
+ *   get:
+ *     summary: Get orders by restaurant
+ *     tags:
+ *      - order
+ *     parameters:
+ *      - in: path
+ *        name: restaurant_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *      - in: query
+ *        name: per_page
+ *        schema:
+ *          type: integer
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: integer
+ *                      name:
+ *                        type: string
+ *                      comment:
+ *                        type: string
+ *                      address:
+ *                        type: string
+ *                      delivery_time:
+ *                        type: date
+ *                        example: 2022-03-03T17:11:25.917Z
+ *                      restaurant_id:
+ *                        type: integer
+ *                      status:
+ *                        type: string
+ *                        example: waiting_for_payment|new|took_order|delivering|done
+ *                      user_id:
+ *                        type: integer
+ *                      dishes:
+ *                        type: array
+ *                        items:
+ *                          type: object
+ *                          properties:
+ *                            id:
+ *                              type: integer
+ *                            name:
+ *                              type: string
+ *                            description:
+ *                              type: string
+ *                            price:
+ *                              type: integer
+ *                            images:
+ *                              type: array
+ *                              items:
+ *                                type: string
+ *                            restaurant_id:
+ *                              type: integer
+ *                            type:
+ *                              type: string
+ *                              example: new|regular
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
+router.get(
+  '/restaurants/:id/orders',
+  AuthMiddleware,
+  ValidatorMiddleware(ValidationType.link, {
+    id: Joi.number().min(1).required(),
+  }),
+  ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
+  orderControllerInstance.getAllForRestaurant,
+);
+
+/**
+ * @openapi
+ * /orders/{order_id}:
+ *   patch:
+ *     summary: Change order status by id
+ *     tags:
+ *      - order
+ *      - Delivery role
+ *     parameters:
+ *      - in: path
+ *        name: order_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *     requestBody:
+ *      description: Body to change status of the order
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              status:
+ *                type: string
+ *                example: waiting_for_payment|new|took_order|delivering|done
+ *            required:
+ *              - status
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: integer
+ *                      name:
+ *                        type: string
+ *                      comment:
+ *                        type: string
+ *                      address:
+ *                        type: string
+ *                      delivery_time:
+ *                        type: date
+ *                        example: 2022-03-03T17:11:25.917Z
+ *                      restaurant_id:
+ *                        type: integer
+ *                      status:
+ *                        type: string
+ *                        example: waiting_for_payment|new|took_order|delivering|done
+ *                      user_id:
+ *                        type: integer
+ *                      dishes:
+ *                        type: array
+ *                        items:
+ *                          type: object
+ *                          properties:
+ *                            id:
+ *                              type: integer
+ *                            name:
+ *                              type: string
+ *                            description:
+ *                              type: string
+ *                            price:
+ *                              type: integer
+ *                            images:
+ *                              type: array
+ *                              items:
+ *                                type: string
+ *                            restaurant_id:
+ *                              type: integer
+ *                            type:
+ *                              type: string
+ *                              example: new|regular
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.patch(
   '/orders/:id',
   AuthMiddleware,
@@ -37,16 +399,160 @@ router.patch(
   orderControllerInstance.changeStatus,
 );
 
-router.get(
-  '/restaurants/:id/orders',
-  AuthMiddleware,
-  ValidatorMiddleware(ValidationType.link, {
-    id: Joi.number().min(1).required(),
-  }),
-  ValidatorMiddleware(ValidationType.query, joiValidation.paggination),
-  orderControllerInstance.getAllForRestaurant,
-);
-
+/**
+ * @openapi
+ * /restaurants/{restaurant_id}/orders:
+ *   post:
+ *     summary: Add order to restaurant
+ *     tags:
+ *      - order
+ *      - User role
+ *     parameters:
+ *      - in: path
+ *        name: restaurant_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *     requestBody:
+ *      description: Body to add restaurant
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *              comment:
+ *                type: string
+ *              dish_ids:
+ *                type: array
+ *                items:
+ *                  type: integer
+ *              address:
+ *                type: string
+ *              delivery_time:
+ *                type: date
+ *            required:
+ *              - name
+ *              - dish_ids
+ *              - address
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: integer
+ *                      name:
+ *                        type: string
+ *                      comment:
+ *                        type: string
+ *                      address:
+ *                        type: string
+ *                      delivery_time:
+ *                        type: date
+ *                        example: 2022-03-03T17:11:25.917Z
+ *                      restaurant_id:
+ *                        type: integer
+ *                      status:
+ *                        type: string
+ *                        example: waiting_for_payment|new|took_order|delivering|done
+ *                      user_id:
+ *                        type: integer
+ *                      dishes:
+ *                        type: array
+ *                        items:
+ *                          type: object
+ *                          properties:
+ *                            id:
+ *                              type: integer
+ *                            name:
+ *                              type: string
+ *                            description:
+ *                              type: string
+ *                            price:
+ *                              type: integer
+ *                            images:
+ *                              type: array
+ *                              items:
+ *                                type: string
+ *                            restaurant_id:
+ *                              type: integer
+ *                            type:
+ *                              type: string
+ *                              example: new|regular
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.post(
   '/restaurants/:id/orders',
   AuthMiddleware,
@@ -64,8 +570,93 @@ router.post(
   orderControllerInstance.create,
 );
 
+/**
+ * @openapi
+ * /orders/{order_id}:
+ *   delete:
+ *     summary: Delete order by id
+ *     tags:
+ *      - order
+ *     parameters:
+ *      - in: path
+ *        name: order_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.delete(
-  '/restaurants/:id/orders',
+  '/orders/:id',
   AuthMiddleware,
   ValidatorMiddleware(ValidationType.link, {
     id: Joi.number().min(1).required(),

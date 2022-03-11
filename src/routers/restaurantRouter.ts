@@ -17,6 +17,121 @@ import {ImageType} from 'models/imageType';
 const router = new Router();
 const restaurantControllerInstance = container.resolve(RestaurantController);
 
+/**
+ * @openapi
+ * /restaurants:
+ *   post:
+ *     summary: Create restaurant
+ *     tags:
+ *      - restaurant
+ *      - Service Provider role
+ *     requestBody:
+ *      description: Body to create
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *              description:
+ *                type: string
+ *              images:
+ *                type: array
+ *                items:
+ *                  type: string
+ *              location:
+ *                type: object
+ *                properties:
+ *                  latitude:
+ *                    type: string
+ *                  longiture:
+ *                    type: string
+ *            required:
+ *              - name
+ *              - description
+ *              - images
+ *              - location
+ *     responses:
+ *       201:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: integer
+ *                    name:
+ *                      type: string
+ *                    description:
+ *                      type: string
+ *                    images:
+ *                      type: array
+ *                      items:
+ *                        type: string
+ *                    owner_id:
+ *                      type: integer
+ *                    location:
+ *                      type: object
+ *                      properties:
+ *                        latitude:
+ *                          type: string
+ *                        longiture:
+ *                          type: string
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.post(
   '/',
   AuthMiddleware,
@@ -31,6 +146,122 @@ router.post(
   restaurantControllerInstance.create,
 );
 
+/**
+ * @openapi
+ * /restaurants/{restaurant_id}:
+ *   patch:
+ *     summary: Update restaurant
+ *     parameters:
+ *      - in: path
+ *        name: restaurant_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *     tags:
+ *      - restaurant
+ *      - Service Provider role
+ *     requestBody:
+ *      description: Body to update
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *              description:
+ *                type: string
+ *              images:
+ *                type: array
+ *                items:
+ *                  type: string
+ *              location:
+ *                type: object
+ *                properties:
+ *                  latitude:
+ *                    type: string
+ *                  longiture:
+ *                    type: string
+ *     responses:
+ *       201:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: integer
+ *                    name:
+ *                      type: string
+ *                    description:
+ *                      type: string
+ *                    images:
+ *                      type: array
+ *                      items:
+ *                        type: string
+ *                    owner_id:
+ *                      type: integer
+ *                    location:
+ *                      type: object
+ *                      properties:
+ *                        latitude:
+ *                          type: string
+ *                        longiture:
+ *                          type: string
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.patch(
   '/:id',
   AuthMiddleware,
@@ -48,6 +279,87 @@ router.patch(
   restaurantControllerInstance.update,
 );
 
+/**
+ * @openapi
+ * /restaurants:
+ *   get:
+ *     summary: Get all restaurants
+ *     parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *      - in: query
+ *        name: per_page
+ *        schema:
+ *          type: integer
+ *     tags:
+ *      - restaurant
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: integer
+ *                      name:
+ *                        type: string
+ *                      description:
+ *                        type: string
+ *                      images:
+ *                        type: array
+ *                        items:
+ *                          type: string
+ *                      owner_id:
+ *                        type: integer
+ *                      location:
+ *                        type: object
+ *                        properties:
+ *                          latitude:
+ *                            type: string
+ *                          longiture:
+ *                            type: string
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.get(
   '/',
   AuthMiddleware,
@@ -55,6 +367,98 @@ router.get(
   restaurantControllerInstance.getAll,
 );
 
+/**
+ * @openapi
+ * /restaurants/{restaurant_id}:
+ *   get:
+ *     summary: Get restaurant by id
+ *     parameters:
+ *      - in: path
+ *        name: restaurant_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *     tags:
+ *      - restaurant
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: integer
+ *                    name:
+ *                      type: string
+ *                    description:
+ *                      type: string
+ *                    images:
+ *                      type: array
+ *                      items:
+ *                        type: string
+ *                    owner_id:
+ *                      type: integer
+ *                    location:
+ *                      type: object
+ *                      properties:
+ *                        latitude:
+ *                          type: string
+ *                        longiture:
+ *                          type: string
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.get(
   '/:id',
   AuthMiddleware,
@@ -64,6 +468,92 @@ router.get(
   restaurantControllerInstance.getOne,
 );
 
+/**
+ * @openapi
+ * /restaurants/{restaurant_id}:
+ *   delete:
+ *     summary: Delete restaurant by id
+ *     parameters:
+ *      - in: path
+ *        name: restaurant_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *     tags:
+ *      - restaurant
+ *      - Service Provider role
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.delete(
   '/:id',
   AuthMiddleware,
@@ -74,6 +564,76 @@ router.delete(
   restaurantControllerInstance.delete,
 );
 
+/**
+ * @openapi
+ * /restaurants/upload_image:
+ *   post:
+ *     summary: Upload image
+ *     tags:
+ *      - restaurant
+ *      - Service Provider role
+ *     responses:
+ *       201:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    url:
+ *                      type: string
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.post(
   '/upload_image',
   AuthMiddleware,

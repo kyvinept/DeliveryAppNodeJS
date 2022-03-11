@@ -37,7 +37,8 @@ class OrderController extends BaseController {
   delete = async (ctx: RouterContext, next: Koa.Next) => {
     const {id} = ctx.params;
     const idInt = parseInt(id);
-    await this.orderService.delete(idInt);
+    const userId = ctx.user.id;
+    await this.orderService.delete(idInt, userId);
     ctx.body = {};
   };
 

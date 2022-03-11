@@ -13,7 +13,11 @@ export async function up(knex: Knex): Promise<void> {
     })
     .createTable('Restaurants_Orders', (table) => {
       table.integer('dish_id').unsigned().references('Dishes.id');
-      table.integer('order_id').unsigned().references('Orders.id');
+      table
+        .integer('order_id')
+        .unsigned()
+        .references('Orders.id')
+        .onDelete('CASCADE');
       table.timestamps(true, true);
     });
 }

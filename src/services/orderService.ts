@@ -63,9 +63,17 @@ class OrderService {
     return {order: {...order, dish_ids: model.dishIds}, payment};
   };
 
-  delete = async (id: number) => {
-    await this.restaurantOrderRepository.deleteWhere('order_id', id);
-    await this.orderRepository.deleteWhere('id', id);
+  delete = async (id: number, userId: number) => {
+    const order = await this.orderRepository.findOneByCondition({id});
+    if (!order) {
+      throw ApiError.notFound(strings.order.orderNotFound);
+    }
+
+    if (order.user_id != userId) {
+      throw ApiError.forbidden();
+    }
+
+    await this.orderRepository.delete(order);
   };
 
   getAllForRestaurant = async (
@@ -111,7 +119,7 @@ class OrderService {
       OrderGraphFetched.dishes,
     );
     if (!order) {
-      throw ApiError.unprocessableEntity(strings.order.orderNotFound);
+      throw ApiError.notFound(strings.order.orderNotFound);
     }
 
     order.status = status;

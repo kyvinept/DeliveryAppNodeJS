@@ -1,5 +1,0 @@
-description: User is not authorized
-content:
-  application/json:
-    schema:
-      $ref: '../schemas/Message.yaml'

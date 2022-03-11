@@ -46,11 +46,11 @@ class DishService {
     });
 
     if (!restaurant) {
-      throw ApiError.unprocessableEntity(strings.restaurant.restaurantNotFound);
+      throw ApiError.notFound(strings.restaurant.restaurantNotFound);
     }
 
     if (restaurant.owner_id != currentUserId) {
-      throw ApiError.unprocessableEntity(strings.common.forbidden);
+      throw ApiError.forbidden();
     }
 
     const dish = await this.dishRepository.create({
@@ -75,7 +75,7 @@ class DishService {
     }
 
     if (!dish) {
-      throw ApiError.unprocessableEntity(strings.dish.dishNotFound);
+      throw ApiError.notFound(strings.dish.dishNotFound);
     }
 
     if (model.name) {

@@ -17,6 +17,7 @@ class UserController {
   save = async (ctx: RouterContext, next: Koa.Next, imageType: ImageType) => {
     const url = await this.imageService.save(ctx.request.file, imageType);
 
+    ctx.status = 201;
     ctx.body = {
       data: {
         url: getServerHost(ctx) + url,

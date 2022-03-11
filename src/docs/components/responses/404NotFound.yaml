@@ -1,5 +1,0 @@
-description: User was not found
-content:
-  application/json:
-    schema:
-      $ref: '../schemas/Message.yaml'

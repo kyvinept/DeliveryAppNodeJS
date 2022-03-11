@@ -59,7 +59,7 @@ class RestaurantService {
     }
 
     if (!restaurant) {
-      throw ApiError.unprocessableEntity(strings.restaurant.restaurantNotFound);
+      throw ApiError.notFound(strings.restaurant.restaurantNotFound);
     }
 
     if (model.name) {

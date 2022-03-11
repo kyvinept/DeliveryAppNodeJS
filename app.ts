@@ -10,8 +10,7 @@ import {SocketServer} from 'sockets';
 import {createServer} from 'http';
 import {container} from 'tsyringe';
 import StripeService from 'services/stripeService';
-import {koaSwagger} from 'koa2-swagger-ui';
-import yamljs from 'yamljs';
+import swagger from 'configs/swagger';
 
 const app = new Koa();
 const httpServer = createServer(app.callback());
@@ -20,9 +19,6 @@ socketServerInstance.configure(httpServer);
 const router = new Router();
 
 router.use('/api', routers.routes());
-
-const spec = yamljs.load('./src/docs/_build/index.yaml');
-router.get('/docs', koaSwagger({routePrefix: false, swaggerOptions: {spec}}));
 router.use(imageRouter.routes());
 
 app.use(logger());
@@ -30,6 +26,8 @@ app.use(json());
 app.use(bodyParser());
 app.use(ErrorHandlingMiddleware);
 app.use(router.routes()).use(router.allowedMethods());
+
+swagger(app);
 
 export const listen = (port: string) => {
   httpServer.listen(port, () => {
