@@ -23,7 +23,7 @@ const restaurantControllerInstance = container.resolve(RestaurantController);
  *   post:
  *     summary: Create restaurant
  *     tags:
- *      - restaurant
+ *      - Restaurant
  *      - Service Provider role
  *     requestBody:
  *      description: Body to create
@@ -158,7 +158,7 @@ router.post(
  *          type: integer
  *        required: true
  *     tags:
- *      - restaurant
+ *      - Restaurant
  *      - Service Provider role
  *     requestBody:
  *      description: Body to update
@@ -294,7 +294,7 @@ router.patch(
  *        schema:
  *          type: integer
  *     tags:
- *      - restaurant
+ *      - Restaurant
  *     responses:
  *       200:
  *        description: Success
@@ -379,7 +379,7 @@ router.get(
  *          type: integer
  *        required: true
  *     tags:
- *      - restaurant
+ *      - Restaurant
  *     responses:
  *       200:
  *        description: Success
@@ -480,7 +480,7 @@ router.get(
  *          type: integer
  *        required: true
  *     tags:
- *      - restaurant
+ *      - Restaurant
  *      - Service Provider role
  *     responses:
  *       200:
@@ -570,7 +570,7 @@ router.delete(
  *   post:
  *     summary: Upload image
  *     tags:
- *      - restaurant
+ *      - Restaurant
  *      - Service Provider role
  *     responses:
  *       201:

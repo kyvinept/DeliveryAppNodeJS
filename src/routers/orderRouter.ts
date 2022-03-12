@@ -21,7 +21,7 @@ const orderControllerInstance = container.resolve(OrderController);
  *   get:
  *     summary: Get orders
  *     tags:
- *      - order
+ *      - Order
  *     parameters:
  *      - in: query
  *        name: page
@@ -130,7 +130,7 @@ router.get(
  *   get:
  *     summary: Get orders by restaurant
  *     tags:
- *      - order
+ *      - Order
  *     parameters:
  *      - in: path
  *        name: restaurant_id
@@ -247,7 +247,7 @@ router.get(
  *   patch:
  *     summary: Change order status by id
  *     tags:
- *      - order
+ *      - Order
  *      - Delivery role
  *     parameters:
  *      - in: path
@@ -405,7 +405,7 @@ router.patch(
  *   post:
  *     summary: Add order to restaurant
  *     tags:
- *      - order
+ *      - Order
  *      - User role
  *     parameters:
  *      - in: path
@@ -576,7 +576,7 @@ router.post(
  *   delete:
  *     summary: Delete order by id
  *     tags:
- *      - order
+ *      - Order
  *     parameters:
  *      - in: path
  *        name: order_id

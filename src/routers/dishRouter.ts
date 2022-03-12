@@ -24,7 +24,7 @@ const dishControllerInstance = container.resolve(DishController);
  *   post:
  *     summary: Create dish
  *     tags:
- *      - dish
+ *      - Dish
  *      - Service Provider role
  *     parameters:
  *      - in: path
@@ -177,7 +177,7 @@ router.post(
  *   post:
  *     summary: Update dish
  *     tags:
- *      - dish
+ *      - Dish
  *      - Service Provider role
  *     parameters:
  *      - in: path
@@ -325,7 +325,7 @@ router.patch(
  *   get:
  *     summary: Get dishes by restaurant id
  *     tags:
- *      - dish
+ *      - Dish
  *     parameters:
  *      - in: path
  *        name: dish_id
@@ -424,7 +424,7 @@ router.get(
  *   get:
  *     summary: Get dishes by restaurant id
  *     tags:
- *      - dish
+ *      - Dish
  *     parameters:
  *      - in: query
  *        name: page
@@ -534,7 +534,7 @@ router.get(
  *   post:
  *     summary: Upload image
  *     tags:
- *      - dish
+ *      - Dish
  *      - Service Provider role
  *     responses:
  *       201:

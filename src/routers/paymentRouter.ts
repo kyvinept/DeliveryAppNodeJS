@@ -19,7 +19,7 @@ const paymentControllerInstance = container.resolve(PaymentController);
  *   patch:
  *     summary: Confirm payment
  *     tags:
- *      - payment
+ *      - Payment
  *      - User role
  *     parameters:
  *      - in: path
@@ -115,7 +115,7 @@ router.patch(
  *   get:
  *     summary: Get payment details
  *     tags:
- *      - payment
+ *      - Payment
  *      - User role
  *     parameters:
  *      - in: path

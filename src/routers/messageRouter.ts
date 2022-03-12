@@ -15,7 +15,7 @@ const messageControllerInstance = container.resolve(MessageController);
  *   get:
  *     summary: Get messages by chat id
  *     tags:
- *      - messages
+ *      - Message
  *     parameters:
  *      - in: query
  *        name: page

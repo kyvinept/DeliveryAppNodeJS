@@ -16,7 +16,7 @@ const userControllerInstance = container.resolve(UserController);
  *   post:
  *     summary: Registration
  *     tags:
- *      - auth
+ *      - Auth
  *     requestBody:
  *      description: Body to sign up
  *      required: true
@@ -86,7 +86,7 @@ router.post(
  *   post:
  *     summary: Login
  *     tags:
- *      - auth
+ *      - Auth
  *     requestBody:
  *      description: Body to login
  *      required: true
@@ -165,7 +165,7 @@ router.post(
  *   post:
  *     summary: Logout
  *     tags:
- *      - auth
+ *      - Auth
  *     responses:
  *       200:
  *        description: Success
@@ -198,7 +198,7 @@ router.post('/logout', AuthMiddleware, userControllerInstance.logout);
  *   post:
  *     summary: Refresh
  *     tags:
- *      - auth
+ *      - Auth
  *     requestBody:
  *      description: Body to refresh
  *      required: true
@@ -257,7 +257,7 @@ router.post(
  *   post:
  *     summary: Forget password
  *     tags:
- *      - auth
+ *      - Auth
  *     requestBody:
  *      description: Body to forget password
  *      required: true
@@ -314,7 +314,7 @@ router.post(
  *   post:
  *     summary: Recover password
  *     tags:
- *      - auth
+ *      - Auth
  *     requestBody:
  *      description: Body to recover password
  *      required: true
