@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --files index.ts",
-    "start": "NODE_ENV=testing nodemon --files index.ts"
+    "start": "NODE_ENV=testing ts-node index.ts"
   },
   "repository": {
     "type": "git",
