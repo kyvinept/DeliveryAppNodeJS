@@ -1,14 +1,8 @@
 import knex from 'knex';
+import knexfile from '../../knexfile';
 
-const connection = knex({
-  client: 'pg',
-  connection: {
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  },
-});
+const connection = knex(
+  process.env.NODE_ENV == 'testing' ? knexfile.testing : knexfile.development,
+);
 
 export default connection;
