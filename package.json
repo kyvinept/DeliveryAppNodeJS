@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --files index.ts"
+    "dev": "nodemon --files index.ts",
+    "start": "nodemon --files index.ts"
   },
   "repository": {
     "type": "git",
