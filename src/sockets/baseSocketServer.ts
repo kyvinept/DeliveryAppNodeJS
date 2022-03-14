@@ -1,7 +1,7 @@
 import ApiError from 'errors/ApiError';
 import Joi from 'joi';
 import {Socket} from 'socket.io';
-import {CommonEventType, EmitEventType} from './EventType';
+import {CommonEventType, EmitEventType} from './eventType';
 import strings from 'strings';
 
 export class BaseSocketServer {

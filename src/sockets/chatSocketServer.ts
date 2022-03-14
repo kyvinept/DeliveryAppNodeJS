@@ -1,6 +1,6 @@
 import {Socket} from 'socket.io';
 import {injectable} from 'tsyringe';
-import {CommonEventType, OnEventType} from './EventType';
+import {CommonEventType, OnEventType} from './eventType';
 import strings from 'strings';
 import {
   MessageCreateModel,

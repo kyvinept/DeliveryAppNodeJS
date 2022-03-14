@@ -2,7 +2,7 @@ import joiValidation from 'constants/joiValidation';
 import {Socket} from 'socket.io';
 import {injectable} from 'tsyringe';
 import {BaseSocketServer} from './baseSocketServer';
-import {CommonEventType, OnEventType} from './EventType';
+import {CommonEventType, OnEventType} from './eventType';
 import {
   LocationAddModel,
   LocationGetModel,
