@@ -15,6 +15,11 @@ initStorage();
 const start = async () => {
   try {
     listen(PORT);
+    console.log(
+      'env',
+      process.env.JWT_ACCESS_SECRET,
+      process.env.JWT_REFRESH_SECRET,
+    );
   } catch (e) {
     console.log(e);
   }
