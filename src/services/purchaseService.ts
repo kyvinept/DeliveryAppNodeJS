@@ -24,6 +24,10 @@ class PurchaseService {
       specificPurchaseData = await this.applePurchaseService.verify(receipt);
     }
 
+    if (specificPurchaseData.expirationDate < new Date().toISOString()) {
+      throw ApiError.unprocessableEntity(strings.purchase.receiptNotValid);
+    }
+
     const purchaseWithTheSameReceipt =
       await this.purchaseRepository.findOneByCondition({receipt});
 
@@ -44,6 +48,7 @@ class PurchaseService {
       purchase.product_id = specificPurchaseData.productId;
       purchase.expiration_date = specificPurchaseData.expirationDate;
       purchase.transaction_id = specificPurchaseData.transactionId;
+      await this.purchaseRepository.update(purchase);
       return;
     }
 
