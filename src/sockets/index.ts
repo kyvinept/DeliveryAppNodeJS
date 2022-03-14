@@ -1,6 +1,6 @@
 import {Server as SocketIOServer, Socket} from 'socket.io';
 import {Server} from 'http';
-import {OnEventType} from './EventType';
+import {OnEventType} from './eventType';
 import {ChatSocketServer} from './chatSocketServer';
 import {container, injectable} from 'tsyringe';
 import {SocketAuthMiddleware} from 'middleware';
