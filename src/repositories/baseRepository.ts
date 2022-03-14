@@ -17,9 +17,14 @@ export interface WhereInModel {
 }
 
 export interface GetAllModel {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
   whereModel?: Object;
+  whereParams?: {
+    name: string;
+    conditionMark: string;
+    value: any;
+  };
   whereNotModel?: Object;
   orWhereModel?: Object;
   graphFetched?: string;
@@ -70,6 +75,14 @@ export default class BaseRepository<T extends Model> {
       condition.where(model.whereModel);
     }
 
+    if (model.whereParams) {
+      condition.where(
+        model.whereParams.name,
+        model.whereParams.conditionMark,
+        model.whereParams.value,
+      );
+    }
+
     if (model.whereNotModel) {
       condition.whereNot(model.whereNotModel);
     }
@@ -78,8 +91,15 @@ export default class BaseRepository<T extends Model> {
       condition.orWhere(model.orWhereModel);
     }
 
-    condition.offset(model.offset).limit(model.limit);
-    return await condition;
+    if (model.offset) {
+      condition.offset(model.offset);
+    }
+
+    if (model.limit) {
+      condition.limit(model.limit);
+    }
+
+    return (await condition) as unknown as T[];
   };
 
   getCount = async (whereModel: Object = null) => {

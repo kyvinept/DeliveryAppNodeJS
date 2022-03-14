@@ -58,6 +58,10 @@ const en = {
     notFound: 'This payment was not found',
     notConfirmed: 'This payment is still waiting for payment.',
   },
+  purchase: {
+    receiptNotValid: 'This receipt is not valid',
+    receiptsAlreadyExist: 'This receipt is already using',
+  },
 };
 
 export default en;
