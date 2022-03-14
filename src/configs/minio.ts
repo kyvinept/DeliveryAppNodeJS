@@ -12,7 +12,13 @@ const createBucketIfNeeded = async () => {
   try {
     const bucketList = await client.listBuckets();
     console.log('bucketList', bucketList);
-    await client.makeBucket('images', 'us-east-1');
+    for (const item of bucketList) {
+      if (item.name == process.env.BUCKET_NAME) {
+        return;
+      }
+    }
+
+    await client.makeBucket(process.env.BUCKET_NAME, 'us-east-1');
   } catch (e) {
     console.log('createBucketIfNeeded error', e);
   }

@@ -1,3 +1,4 @@
+import {RouterContext} from '@koa/router';
 import ApiError from 'errors/ApiError';
 import Joi from 'joi';
 import Koa from 'koa';
@@ -10,7 +11,7 @@ export enum ValidationType {
 }
 
 export default (type: ValidationType, object: Object) => {
-  return async (ctx: Koa.Context, next: Koa.Next) => {
+  return async (ctx: RouterContext, next: Koa.Next) => {
     const joiObject = Joi.object(object);
 
     let params = {};
