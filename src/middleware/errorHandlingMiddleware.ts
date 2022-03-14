@@ -2,8 +2,9 @@ import ApiError from 'errors/ApiError';
 import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
 import strings from 'strings';
+import {RouterContext} from '@koa/router';
 
-export default async (ctx: Koa.Context, next: Koa.Next) => {
+export default async (ctx: RouterContext, next: Koa.Next) => {
   try {
     await next();
   } catch (error) {
