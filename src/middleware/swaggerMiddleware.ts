@@ -13,6 +13,8 @@ function createSwaggerMiddleware(
   let swaggerSpec;
 
   app.use((ctx, next) => {
+    console.log(getServerHost(ctx) + 'api' + swaggerJsonPath);
+
     app.use(
       // @ts-ignore
       koaSwagger({
