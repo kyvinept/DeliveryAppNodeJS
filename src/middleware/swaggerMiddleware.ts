@@ -6,8 +6,6 @@ function createSwaggerMiddleware(
   app,
   {apiUrl, version, title, parseOnRequest, apis, securityDefinitions},
 ) {
-  console.log('createSwaggerMiddleware');
-
   const swaggerJsonPath = '/swagger.json';
 
   let swaggerSpec;
@@ -62,7 +60,7 @@ function createSwaggerMiddleware(
       swaggerVersion: '3.30.2',
       routePrefix: '/api/swagger',
       swaggerOptions: {
-        url: 'https://delivery-app-for-client-apps.herokuapp.com/api/swagger.json',
+        url: apiUrl,
         showRequestHeaders: true,
       },
       hideTopbar: true,

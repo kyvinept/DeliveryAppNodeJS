@@ -6,7 +6,7 @@ const configure = (app: Koa) => {
   createSwaggerMiddleware(app, {
     title: 'The Service',
     version: '1.0.0',
-    apiUrl: 'http://localhost:3000/api',
+    apiUrl: 'https://delivery-app-for-client-apps.herokuapp.com/api',
     parseOnRequest: false,
     apis: [path.join(process.cwd(), '/src/routers/*.ts')],
     securityDefinitions: {
