@@ -11,7 +11,11 @@ function createSwaggerMiddleware(
 
   app.use((ctx, next) => {
     if (ctx.path === '/api' + swaggerJsonPath) {
+      console.log('API SWAGGER');
+
       if (!swaggerSpec || parseOnRequest) {
+        console.log('swaggerJSDoc');
+
         // openapi 3.0
         swaggerSpec = swaggerJSDoc({
           apis,
