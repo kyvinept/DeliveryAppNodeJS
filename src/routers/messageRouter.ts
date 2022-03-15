@@ -48,7 +48,8 @@ const messageControllerInstance = container.resolve(MessageController);
  *                      message:
  *                        type: string
  *                      date:
- *                        type: date
+ *                        type: string
+ *                        example: 2022-03-03T17:11:25.917Z
  *                      chat_id:
  *                        type: integer
  *                      owner_id:

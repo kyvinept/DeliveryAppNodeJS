@@ -53,7 +53,7 @@ const orderControllerInstance = container.resolve(OrderController);
  *                      address:
  *                        type: string
  *                      delivery_time:
- *                        type: date
+ *                        type: string
  *                        example: 2022-03-03T17:11:25.917Z
  *                      restaurant_id:
  *                        type: integer
@@ -167,7 +167,7 @@ router.get(
  *                      address:
  *                        type: string
  *                      delivery_time:
- *                        type: date
+ *                        type: string
  *                        example: 2022-03-03T17:11:25.917Z
  *                      restaurant_id:
  *                        type: integer
@@ -288,7 +288,7 @@ router.get(
  *                      address:
  *                        type: string
  *                      delivery_time:
- *                        type: date
+ *                        type: string
  *                        example: 2022-03-03T17:11:25.917Z
  *                      restaurant_id:
  *                        type: integer
@@ -432,7 +432,8 @@ router.patch(
  *              address:
  *                type: string
  *              delivery_time:
- *                type: date
+ *                type: string
+ *                example: 2022-03-03T17:11:25.917Z
  *            required:
  *              - name
  *              - dish_ids
@@ -457,7 +458,7 @@ router.patch(
  *                      address:
  *                        type: string
  *                      delivery_time:
- *                        type: date
+ *                        type: string
  *                        example: 2022-03-03T17:11:25.917Z
  *                      restaurant_id:
  *                        type: integer
