@@ -60,7 +60,7 @@ function createSwaggerMiddleware(
       swaggerVersion: '3.30.2',
       routePrefix: '/api/swagger',
       swaggerOptions: {
-        url: apiUrl,
+        url: apiUrl + swaggerJsonPath,
         showRequestHeaders: true,
       },
       hideTopbar: true,
