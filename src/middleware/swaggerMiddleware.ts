@@ -5,11 +5,15 @@ function createSwaggerMiddleware(
   app,
   {apiUrl, version, title, parseOnRequest, apis, securityDefinitions},
 ) {
+  console.log('createSwaggerMiddleware');
+
   const swaggerJsonPath = '/swagger.json';
 
   let swaggerSpec;
 
   app.use((ctx, next) => {
+    console.log('app usee');
+
     if (ctx.path === '/api' + swaggerJsonPath) {
       console.log('API SWAGGER');
 
