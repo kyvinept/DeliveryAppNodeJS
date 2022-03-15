@@ -13,20 +13,6 @@ function createSwaggerMiddleware(
   let swaggerSpec;
 
   app.use((ctx, next) => {
-    app.use(
-      // @ts-ignore
-      koaSwagger({
-        title,
-        swaggerVersion: '3.30.2',
-        routePrefix: '/api/swagger',
-        swaggerOptions: {
-          url: getServerHost(ctx) + 'api' + swaggerJsonPath,
-          showRequestHeaders: true,
-        },
-        hideTopbar: true,
-      }),
-    );
-
     if (ctx.path === '/api' + swaggerJsonPath) {
       if (!swaggerSpec || parseOnRequest) {
         // openapi 3.0
@@ -68,6 +54,20 @@ function createSwaggerMiddleware(
 
     return next();
   });
+
+  app.use(
+    // @ts-ignore
+    koaSwagger({
+      title,
+      swaggerVersion: '3.30.2',
+      routePrefix: '/api/swagger',
+      swaggerOptions: {
+        url: 'https://delivery-app-for-client-apps.herokuapp.com/api/swagger.json',
+        showRequestHeaders: true,
+      },
+      hideTopbar: true,
+    }),
+  );
 }
 
 export default createSwaggerMiddleware;
