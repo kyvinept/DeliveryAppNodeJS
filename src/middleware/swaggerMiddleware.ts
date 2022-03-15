@@ -1,3 +1,4 @@
+import {getServerHost} from 'helpers/getServerHost';
 import {koaSwagger} from 'koa2-swagger-ui';
 import swaggerJSDoc from 'swagger-jsdoc';
 
@@ -12,14 +13,22 @@ function createSwaggerMiddleware(
   let swaggerSpec;
 
   app.use((ctx, next) => {
-    console.log('app usee');
+    app.use(
+      // @ts-ignore
+      koaSwagger({
+        title,
+        swaggerVersion: '3.30.2',
+        routePrefix: '/api/swagger',
+        swaggerOptions: {
+          url: getServerHost(ctx) + 'api' + swaggerJsonPath,
+          showRequestHeaders: true,
+        },
+        hideTopbar: true,
+      }),
+    );
 
     if (ctx.path === '/api' + swaggerJsonPath) {
-      console.log('API SWAGGER');
-
       if (!swaggerSpec || parseOnRequest) {
-        console.log('swaggerJSDoc');
-
         // openapi 3.0
         swaggerSpec = swaggerJSDoc({
           apis,
@@ -59,20 +68,6 @@ function createSwaggerMiddleware(
 
     return next();
   });
-
-  app.use(
-    // @ts-ignore
-    koaSwagger({
-      title,
-      swaggerVersion: '3.30.2',
-      routePrefix: '/api/swagger',
-      swaggerOptions: {
-        url: apiUrl + swaggerJsonPath,
-        showRequestHeaders: true,
-      },
-      hideTopbar: true,
-    }),
-  );
 }
 
 export default createSwaggerMiddleware;
