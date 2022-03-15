@@ -15,6 +15,83 @@ import {PurchasePlatform} from 'models/purchasePlatform';
 const router = new Router();
 const purchaseControllerInstance = container.resolve(PurchaseController);
 
+/**
+ * @openapi
+ * /purchases/verify:
+ *   post:
+ *     summary: Verify purchase
+ *     tags:
+ *      - Purchase
+ *      - User role
+ *     requestBody:
+ *      description: Body to verify
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              receipt:
+ *                type: string
+ *              platform:
+ *                type: string
+ *                example: apple|android
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *       401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
 router.post(
   '/purchases/verify',
   AuthMiddleware,

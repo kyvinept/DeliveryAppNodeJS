@@ -1,6 +1,5 @@
 import ApiError from 'errors/ApiError';
 import {PlatformSpecificPurchaseModel} from 'models/database/platformSpecificPurchaseModel';
-import {Purchase} from 'models/database/purchase';
 import {PurchasePlatform} from 'models/purchasePlatform';
 import PurchaseRepository from 'repositories/purchaseRepository';
 import strings from 'strings';
