@@ -187,6 +187,7 @@ router.get(
  *        name: chat_id
  *        schema:
  *          type: integer
+ *        required: true
  *      - in: query
  *        name: page
  *        schema:
