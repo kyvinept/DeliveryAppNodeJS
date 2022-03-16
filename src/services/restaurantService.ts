@@ -4,6 +4,8 @@ import {injectable} from 'tsyringe';
 import RestaurantRepository from 'repositories/restaurantRepository';
 import {Location} from 'models/location';
 import ImageService from './imageService';
+import PushNotificationService from './pushNotificationService';
+import {UserRole} from 'models/database/user';
 
 export interface RestaurantCreateModel {
   ownerId: number;
@@ -26,6 +28,7 @@ class RestaurantService {
   constructor(
     private restaurantRepository: RestaurantRepository,
     private imageService: ImageService,
+    private pushNotificationService: PushNotificationService,
   ) {}
 
   create = async (model: RestaurantCreateModel) => {
@@ -44,6 +47,11 @@ class RestaurantService {
       images: model.images,
       owner_id: model.ownerId,
       location: model.location,
+    });
+
+    await this.pushNotificationService.sendPushToGroup({
+      text: strings.notification.newRestaurantsAreAvailableNow,
+      userRole: UserRole.user,
     });
 
     return restaurant;

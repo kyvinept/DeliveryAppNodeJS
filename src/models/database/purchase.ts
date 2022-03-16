@@ -1,10 +1,10 @@
-import {PurchasePlatform} from 'models/purchasePlatform';
+import {DevicePlatform} from 'models/devicePlatform';
 import {Model} from 'objection';
 
 export interface IPurchase {
   id: number;
   receipt: string;
-  platform: PurchasePlatform;
+  platform: DevicePlatform;
   product_id: string;
   expiration_date: string;
   transaction_id: string;
@@ -14,7 +14,7 @@ export interface IPurchase {
 export class Purchase extends Model implements IPurchase {
   id: number;
   receipt: string;
-  platform: PurchasePlatform;
+  platform: DevicePlatform;
   product_id: string;
   expiration_date: string;
   transaction_id: string;

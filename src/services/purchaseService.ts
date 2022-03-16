@@ -1,6 +1,6 @@
 import ApiError from 'errors/ApiError';
 import {PlatformSpecificPurchaseModel} from 'models/database/platformSpecificPurchaseModel';
-import {PurchasePlatform} from 'models/purchasePlatform';
+import {DevicePlatform} from 'models/devicePlatform';
 import PurchaseRepository from 'repositories/purchaseRepository';
 import strings from 'strings';
 import {delay, inject, injectable} from 'tsyringe';
@@ -15,11 +15,11 @@ class PurchaseService {
 
   verify = async (
     receipt: string,
-    platform: PurchasePlatform,
+    platform: DevicePlatform,
     userId: number,
   ) => {
     let specificPurchaseData: PlatformSpecificPurchaseModel = null;
-    if (platform == PurchasePlatform.apple) {
+    if (platform == DevicePlatform.apple) {
       specificPurchaseData = await this.applePurchaseService.verify(receipt);
     }
 
@@ -82,12 +82,9 @@ class PurchaseService {
     });
   };
 
-  private checkIfValid = async (
-    receipt: string,
-    platform: PurchasePlatform,
-  ) => {
+  private checkIfValid = async (receipt: string, platform: DevicePlatform) => {
     try {
-      if (platform == PurchasePlatform.apple) {
+      if (platform == DevicePlatform.apple) {
         return await this.applePurchaseService.verify(receipt);
       }
     } catch (e) {

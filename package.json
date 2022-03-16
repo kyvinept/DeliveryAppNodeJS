@@ -81,6 +81,7 @@
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "objection": "^3.0.1",
+    "onesignal-node": "^3.3.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "redis": "^4.0.4",

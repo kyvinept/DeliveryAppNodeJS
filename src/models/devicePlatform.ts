@@ -1,4 +1,4 @@
-export enum PurchasePlatform {
+export enum DevicePlatform {
   apple = 'apple',
   android = 'android',
 }

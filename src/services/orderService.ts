@@ -8,8 +8,9 @@ import {OrderGraphFetched} from 'models/database/order';
 import StorageManager from 'storage/storageManager';
 import {Location} from 'models/location';
 import PaymentService from './paymentService';
-import {IUser} from 'models/database/user';
+import {IUser, UserRole} from 'models/database/user';
 import DishService from './dishService';
+import PushNotificationService from './pushNotificationService';
 
 export interface OrderModel {
   restaurantId: number;
@@ -33,6 +34,7 @@ class OrderService {
     private storageManager: StorageManager,
     @inject(delay(() => PaymentService)) private paymentService: PaymentService,
     private dishService: DishService,
+    private pushNotificationService: PushNotificationService,
   ) {}
 
   create = async (model: OrderModel, user: IUser) => {
@@ -158,6 +160,11 @@ class OrderService {
     const order = await this.orderRepository.findOneByCondition({id});
     order.status = OrderStatus.new;
     await this.orderRepository.update(order);
+
+    await this.pushNotificationService.sendPushToGroup({
+      text: strings.notification.newOrdersAreAvailableNow,
+      userRole: UserRole.delivery,
+    });
   };
 }
 

@@ -62,6 +62,11 @@ const en = {
     receiptNotValid: 'This receipt is not valid',
     receiptsAlreadyExist: 'This receipt is already using',
   },
+  notification: {
+    newOrdersAreAvailableNow: 'New orders are available now!',
+    newRestaurantsAreAvailableNow:
+      'New restaurants are available now! Just open the app and look at these ones!',
+  },
 };
 
 export default en;

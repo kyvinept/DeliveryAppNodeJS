@@ -7,31 +7,31 @@ import {
 import {container} from 'tsyringe';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import joiValidation from 'constants/joiValidation';
-import {UserRole} from 'models/database/user';
-import PurchaseController from 'controllers/purchaseController';
+import PushNotificationController from 'controllers/pushNotificationController';
 import Joi from 'joi';
 import {DevicePlatform} from 'models/devicePlatform';
 
 const router = new Router();
-const purchaseControllerInstance = container.resolve(PurchaseController);
+const pushNotificationControllerInstance = container.resolve(
+  PushNotificationController,
+);
 
 /**
  * @openapi
- * /purchases/verify:
+ * /push-notification/register:
  *   post:
- *     summary: Verify purchase
+ *     summary: Register device
  *     tags:
- *      - Purchase
- *      - User role
+ *      - PushNotification
  *     requestBody:
- *      description: Body to verify
+ *      description: Body to register
  *      required: true
  *      content:
  *        application/json:
  *          schema:
  *            type: object
  *            properties:
- *              receipt:
+ *              identifier:
  *                type: string
  *              platform:
  *                type: string
@@ -93,16 +93,15 @@ const purchaseControllerInstance = container.resolve(PurchaseController);
  *                        type: object
  */
 router.post(
-  '/purchases/verify',
+  '/push-notification/register',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.body, {
-    receipt: joiValidation.requiredString,
+    identifier: joiValidation.requiredString,
     platform: Joi.string()
       .valid(...Object.values(DevicePlatform).map((item) => item.toString()))
       .required(),
   }),
-  purchaseControllerInstance.verify,
+  pushNotificationControllerInstance.register,
 );
 
 export default router;
