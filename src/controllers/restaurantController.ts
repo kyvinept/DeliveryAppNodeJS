@@ -56,10 +56,12 @@ class RestaurantController extends BaseController {
     const {page, per_page} = ctx.query;
     const pageInt = parseInt(page as string);
     const perPageInt = parseInt(per_page as string);
+    const user = ctx.user;
 
     const restaurantsModel = await this.restaurantService.getAll(
       pageInt,
       perPageInt,
+      user
     );
 
     ctx.body = this.paginationBody({

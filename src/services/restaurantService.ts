@@ -5,7 +5,7 @@ import RestaurantRepository from 'repositories/restaurantRepository';
 import {Location} from 'models/location';
 import ImageService from './imageService';
 import PushNotificationService from './pushNotificationService';
-import {UserRole} from 'models/database/user';
+import {IUser, UserRole} from 'models/database/user';
 
 export interface RestaurantCreateModel {
   ownerId: number;
@@ -104,10 +104,16 @@ class RestaurantService {
     return restaurant;
   };
 
-  getAll = async (page: number, perPage: number) => {
+  getAll = async (page: number, perPage: number, user: IUser) => {
+    const whereModel = {} as any;    
+    if (user.role === UserRole.serviceProvider) {
+      whereModel.owner_id = user.id;
+    }
+
     const data = await this.restaurantRepository.getAllWithPagination({
       page,
       perPage,
+      whereModel
     });
 
     return data;
