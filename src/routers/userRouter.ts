@@ -47,10 +47,23 @@ const userControllerInstance = container.resolve(UserController);
  *                data:
  *                  type: object
  *                  properties:
- *                    accessToken:
- *                      type: string
- *                    refreshToken:
- *                      type: string
+ *                    tokens:
+ *                      type: object
+ *                      properties:
+ *                        accessToken:
+ *                          type: string
+ *                        refreshToken:
+ *                          type: string
+ *                    user:
+ *                      type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                        role:
+ *                          type: string
+ *                          example: USER|DELIVERY|SERVICE_PROVIDER
+ *                        email:
+ *                          type: string
  *       422:
  *        description: Unprocessable entity error
  *        content:
@@ -113,10 +126,23 @@ router.post(
  *                data:
  *                  type: object
  *                  properties:
- *                    accessToken:
- *                      type: string
- *                    refreshToken:
- *                      type: string
+ *                    tokens:
+ *                      type: object
+ *                      properties:
+ *                        accessToken:
+ *                          type: string
+ *                        refreshToken:
+ *                          type: string
+ *                    user:
+ *                      type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                        role:
+ *                          type: string
+ *                          example: USER|DELIVERY|SERVICE_PROVIDER
+ *                        email:
+ *                          type: string
  *       404:
  *        description: Not found
  *        content:

@@ -6,6 +6,7 @@ import strings from 'strings';
 import {injectable} from 'tsyringe';
 import UserRepository from 'repositories/userRepository';
 import EmailService from './emailService';
+import { TokensModel } from 'models/tokensModel';
 
 @injectable()
 class UserService {
@@ -34,7 +35,7 @@ class UserService {
       role,
     });
 
-    return tokens;
+    return this.prepareUserInfoForResponse(tokens, newUser);
   };
 
   login = async (email: string, password: string) => {
@@ -55,7 +56,7 @@ class UserService {
       role: user.role,
     });
 
-    return tokens;
+    return this.prepareUserInfoForResponse(tokens, user);
   };
 
   logout = async (user: IUser) => {
@@ -98,6 +99,17 @@ class UserService {
     user.forget_password_token = null;
     await this.userRepository.update(user);
   };
+
+  private prepareUserInfoForResponse = (tokens: TokensModel, user: IUser) => {
+    return {
+      tokens,
+      user: {
+        id: user.id,
+        role: user.role,
+        email: user.email
+      }
+    }
+  }
 }
 
 export default UserService;
