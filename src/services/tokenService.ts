@@ -15,9 +15,9 @@ class TokenService {
     });
 
     const refreshToken = jwt.sign(data, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: '30d',
+      expiresIn: '7d',
     });
-
+    
     return {accessToken, refreshToken};
   };
 
