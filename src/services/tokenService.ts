@@ -27,13 +27,13 @@ class TokenService {
   ) => {
     const tokenData = await this.tokenRepository.findOneByCondition({userId});
     if (tokenData) {
-      tokenData.refresh_token = hash(refreshToken, HashType.token);
+      tokenData.refresh_token = refreshToken;
       await this.tokenRepository.update(tokenData);
       return tokenData;
     }
     const newToken = await this.tokenRepository.create({
       userId,
-      refresh_token: hash(refreshToken, HashType.token),
+      refresh_token: refreshToken,
     });
     return newToken;
   };
@@ -65,7 +65,7 @@ class TokenService {
 
   refresh = async (refreshToken: string) => {
     const tokenData = await this.tokenRepository.findOneByCondition({
-      refresh_token: hash(refreshToken, HashType.token),
+      refresh_token: refreshToken,
     });
 
     if (!tokenData) {
