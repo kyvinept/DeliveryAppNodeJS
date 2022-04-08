@@ -1,5 +1,5 @@
 import ApiError from 'errors/ApiError';
-import {hash} from 'helpers/hash';
+import {hash, HashType} from 'helpers/hash';
 import jwt from 'jsonwebtoken';
 import {IUser} from 'models/database/user';
 import TokenRepository from 'repositories/tokenRepository';
@@ -27,13 +27,13 @@ class TokenService {
   ) => {
     const tokenData = await this.tokenRepository.findOneByCondition({userId});
     if (tokenData) {
-      tokenData.refresh_token = hash(refreshToken);
+      tokenData.refresh_token = hash(refreshToken, HashType.token);
       await this.tokenRepository.update(tokenData);
       return tokenData;
     }
     const newToken = await this.tokenRepository.create({
       userId,
-      refresh_token: hash(refreshToken),
+      refresh_token: hash(refreshToken, HashType.token),
     });
     return newToken;
   };
@@ -65,7 +65,7 @@ class TokenService {
 
   refresh = async (refreshToken: string) => {
     const tokenData = await this.tokenRepository.findOneByCondition({
-      refresh_token: hash(refreshToken),
+      refresh_token: hash(refreshToken, HashType.token),
     });
 
     if (!tokenData) {

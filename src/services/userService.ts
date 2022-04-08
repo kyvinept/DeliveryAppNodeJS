@@ -1,7 +1,7 @@
 import ApiError from 'errors/ApiError';
 import {IUser} from 'models/database/user';
 import TokenService from './tokenService';
-import {compareStrings, hash} from 'helpers/hash';
+import {compareStrings, hash, HashType} from 'helpers/hash';
 import strings from 'strings';
 import {injectable} from 'tsyringe';
 import UserRepository from 'repositories/userRepository';
@@ -22,7 +22,7 @@ class UserService {
       throw ApiError.unprocessableEntity(strings.user.emailAlreadyInUse);
     }
 
-    const hashedPassword = await hash(password);
+    const hashedPassword = await hash(password, HashType.password);
     const newUser = await this.userRepository.create({
       email,
       password: hashedPassword,
@@ -45,7 +45,7 @@ class UserService {
       throw ApiError.notFound(strings.user.isNotRegistered);
     }
 
-    const comparePassword = compareStrings(password, user.password);
+    const comparePassword = compareStrings(password, user.password, HashType.password);
     if (!comparePassword) {
       throw ApiError.unprocessableEntity(strings.user.wrongPassword);
     }
@@ -95,7 +95,7 @@ class UserService {
       throw ApiError.unprocessableEntity(strings.user.tokenWasExpired);
     }
 
-    user.password = await hash(newPassword);
+    user.password = await hash(newPassword, HashType.password);
     user.forget_password_token = null;
     await this.userRepository.update(user);
   };
