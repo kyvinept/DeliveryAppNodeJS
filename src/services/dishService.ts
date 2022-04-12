@@ -83,7 +83,7 @@ class DishService {
         name: model.name,
       });
 
-      if (newNameRestaurant) {
+      if (newNameRestaurant && newNameRestaurant.id != model.id) {
         throw ApiError.unprocessableEntity(strings.dish.dishAlreadyExist);
       }
 

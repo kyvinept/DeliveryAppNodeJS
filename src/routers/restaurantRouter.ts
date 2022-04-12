@@ -46,7 +46,7 @@ const restaurantControllerInstance = container.resolve(RestaurantController);
  *                properties:
  *                  latitude:
  *                    type: string
- *                  longiture:
+ *                  longitude:
  *                    type: string
  *            required:
  *              - name

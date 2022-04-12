@@ -174,7 +174,7 @@ router.post(
 /**
  * @openapi
  * /dishes/{dish_id}:
- *   post:
+ *   patch:
  *     summary: Update dish
  *     tags:
  *      - Dish
