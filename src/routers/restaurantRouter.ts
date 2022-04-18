@@ -572,6 +572,15 @@ router.delete(
  *     tags:
  *      - Restaurant
  *      - Service Provider role
+ *     requestBody:
+ *      content:
+ *        multipart/form-data:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              image:
+ *                type: string
+ *                format: binary
  *     responses:
  *       201:
  *        description: Success

@@ -23,6 +23,7 @@ const en = {
   image: {
     format: 'Only images are allowed',
     imageNotFound: 'This image was not found.',
+    imageWasNotFoundInBody: 'This image was not found in body',
     imageHasNotBeenUploaded:
       'This image was not found on our server. Please upload firstly and try again.',
   },
