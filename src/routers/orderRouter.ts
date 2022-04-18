@@ -19,7 +19,7 @@ const orderControllerInstance = container.resolve(OrderController);
  * @openapi
  * /orders:
  *   get:
- *     summary: Get orders
+ *     summary: Get all orders for SERVICE PROVIDER and DELIVERY, get my orders for USER
  *     tags:
  *      - Order
  *     parameters:
@@ -128,7 +128,7 @@ router.get(
  * @openapi
  * /restaurants/{restaurant_id}/orders:
  *   get:
- *     summary: Get orders by restaurant
+ *     summary: Get all orders for SERVICE PROVIDER and DELIVERY by restaurant, get my orders for USER by restaurant
  *     tags:
  *      - Order
  *     parameters:
