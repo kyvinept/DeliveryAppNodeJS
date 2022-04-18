@@ -7,7 +7,7 @@ export enum HashType {
 
 export const hash = (string: string, type: HashType): string => {
   const hash = crypto
-    .pbkdf2Sync(string, process.env.SALT_VALUE, 1000, type === HashType.token ? 255 : 64, 'sha512')
+    .pbkdf2Sync(Buffer.from(string, 'binary'), Buffer.from(process.env.SALT_VALUE, 'binary'), 1000, type === HashType.token ? 255 : 64, 'sha512')
     .toString('hex');
   return hash;
 };
