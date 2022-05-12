@@ -447,48 +447,64 @@ router.patch(
  *              type: object
  *              properties:
  *                data:
- *                    type: object
- *                    properties:
- *                      id:
- *                        type: integer
- *                      name:
- *                        type: string
- *                      comment:
- *                        type: string
- *                      address:
- *                        type: string
- *                      delivery_time:
- *                        type: string
- *                        example: 2022-03-03T17:11:25.917Z
- *                      restaurant_id:
- *                        type: integer
- *                      status:
- *                        type: string
- *                        example: waiting_for_payment|new|took_order|delivering|done
- *                      user_id:
- *                        type: integer
- *                      dishes:
- *                        type: array
- *                        items:
- *                          type: object
- *                          properties:
- *                            id:
- *                              type: integer
- *                            name:
- *                              type: string
- *                            description:
- *                              type: string
- *                            price:
- *                              type: integer
- *                            images:
- *                              type: array
- *                              items:
+ *                  type: object
+ *                  properties:
+ *                    payment:
+ *                      type: object
+ *                      properties:
+ *                        paymentIntentId:
+ *                          type: string
+ *                        paymentIntentSecret:
+ *                          type: string
+ *                        customerId:
+ *                          type: string
+ *                        ephemeralKeySecret:
+ *                          type: string
+ *                        id:
+ *                          type: integer
+ *                    order:
+ *                      type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                        name:
+ *                          type: string
+ *                        comment:
+ *                          type: string
+ *                        address:
+ *                          type: string
+ *                        delivery_time:
+ *                          type: string
+ *                          example: 2022-03-03T17:11:25.917Z
+ *                        restaurant_id:
+ *                          type: integer
+ *                        status:
+ *                          type: string
+ *                          example: waiting_for_payment|new|took_order|delivering|done
+ *                        user_id:
+ *                          type: integer
+ *                        dishes:
+ *                          type: array
+ *                          items:
+ *                            type: object
+ *                            properties:
+ *                              id:
+ *                                type: integer
+ *                              name:
  *                                type: string
- *                            restaurant_id:
- *                              type: integer
- *                            type:
- *                              type: string
- *                              example: new|regular
+ *                              description:
+ *                                type: string
+ *                              price:
+ *                                type: integer
+ *                              images:
+ *                                type: array
+ *                                items:
+ *                                  type: string
+ *                              restaurant_id:
+ *                                type: integer
+ *                              type:
+ *                                type: string
+ *                                example: new|regular
  *       401:
  *        description: Unauthorized
  *        content:
