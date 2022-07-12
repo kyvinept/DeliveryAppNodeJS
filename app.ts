@@ -12,6 +12,7 @@ import {createServer} from 'http';
 import {container} from 'tsyringe';
 import StripeService from 'services/stripeService';
 import swagger from 'configs/swagger';
+import fs from 'fs';
 
 const app = new Koa();
 const httpServer = createServer(app.callback());
@@ -19,6 +20,11 @@ const socketServerInstance = container.resolve(SocketServer);
 socketServerInstance.configure(httpServer);
 const router = new Router();
 
+router.get('/.well-known/apple-app-site-association', (ctx,next) => {
+  ctx.status = 200
+  let data = fs.readFileSync('./public/.well-known/apple-app-site-association', 'utf8')
+  ctx.body = JSON.parse(data);
+});
 router.use('/api', routers.routes());
 router.use(imageRouter.routes());
 
