@@ -86,11 +86,262 @@ router.post(
   ValidatorMiddleware(ValidationType.body, {
     email: joiValidation.email,
     password: joiValidation.password,
-    role: Joi.string()
-      .valid(...Object.values(UserRole).map((item) => item.toString()))
-      .required(),
+    role: joiValidation.roles,
   }),
   userControllerInstance.registration,
+);
+
+/**
+ * @openapi
+ * /registration_passkeys_initialize:
+ *   post:
+ *     summary: Passkeys registration
+ *     tags:
+ *      - Auth
+ *      - Passkeys
+ *     requestBody:
+ *      description: Body to sign up
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *              role:
+ *                type: string
+ *                example: USER|DELIVERY|SERVICE_PROVIDER
+ *            required:
+ *              - email
+ *              - role
+ *     responses:
+ *       201:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    challenge:
+ *                      type: string
+ *                    user:
+ *                      type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                        role:
+ *                          type: string
+ *                          example: USER|DELIVERY|SERVICE_PROVIDER
+ *                        email:
+ *                          type: string
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
+router.post(
+  '/registration_passkeys_initialize', 
+  ValidatorMiddleware(ValidationType.body, {
+    email: joiValidation.email,
+    role: joiValidation.roles,
+  }),
+  userControllerInstance.registrationPasskeysInitialize,
+);
+
+/**
+ * @openapi
+ * /users/{user_id}/registration_passkeys_finalize:
+ *   post:
+ *     summary: Passkeys registration
+ *     tags:
+ *      - Auth
+ *      - Passkeys
+ *     requestBody:
+ *      description: Body to sign up
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              clientData:
+ *                type: string
+ *            required:
+ *              - clientData
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    tokens:
+ *                      type: object
+ *                      properties:
+ *                        accessToken:
+ *                          type: string
+ *                        refreshToken:
+ *                          type: string
+ *                    user:
+ *                      type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                        role:
+ *                          type: string
+ *                          example: USER|DELIVERY|SERVICE_PROVIDER
+ *                        email:
+ *                          type: string
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
+router.post(
+  '/users/:id/registration_passkeys_finalize',
+  ValidatorMiddleware(ValidationType.link, {
+    id: joiValidation.id,
+  }),
+  ValidatorMiddleware(ValidationType.body, {
+    clientData: joiValidation.requiredString,
+  }),
+  userControllerInstance.registrationPasskeysFinalize,
+);
+
+/**
+ * @openapi
+ * /login_passkeys_initialize:
+ *   get:
+ *     summary: Passkeys login
+ *     tags:
+ *      - Auth
+ *      - Passkeys
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    challenge:
+ *                      type: string
+ */
+router.get(
+  '/login_passkeys_initialize', 
+  userControllerInstance.loginPasskeysInitialize,
+);
+
+/**
+ * @openapi
+ * /login_passkeys_finalize:
+ *   post:
+ *     summary: Passkeys login
+ *     tags:
+ *      - Auth
+ *      - Passkeys
+ *     requestBody:
+ *      description: Body to login
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              clientData:
+ *                type: string
+ *              email:
+ *                type: string
+ *            required:
+ *              - clientData
+ *              - email
+ *     responses:
+ *       200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    tokens:
+ *                      type: object
+ *                      properties:
+ *                        accessToken:
+ *                          type: string
+ *                        refreshToken:
+ *                          type: string
+ *                    user:
+ *                      type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                        role:
+ *                          type: string
+ *                          example: USER|DELIVERY|SERVICE_PROVIDER
+ *                        email:
+ *                          type: string
+ *       422:
+ *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ */
+router.post(
+  '/login_passkeys_finalize', 
+  ValidatorMiddleware(ValidationType.body, {
+    email: joiValidation.email,
+    clientData: joiValidation.requiredString,
+  }),
+  userControllerInstance.loginPasskeysFinalize,
 );
 
 /**

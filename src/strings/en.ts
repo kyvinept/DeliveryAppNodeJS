@@ -9,6 +9,8 @@ const en = {
     emailAlreadyInUse: 'Such email is already in use',
     isNotRegistered: "Such user hasn't been registered.",
     wrongPassword: 'Wrong password',
+    wrongUserId: 'Wrong user id',
+    alreadyFinalized: 'Already finalized',
     tokenWasExpired:
       'This token is not active now! Please resend the mail again.',
   },

@@ -5,6 +5,7 @@ export interface IUser {
   email: string;
   role: string;
   forget_password_token?: string;
+  registration_type?: string;
 }
 
 export enum UserRole {
@@ -13,11 +14,17 @@ export enum UserRole {
   delivery = 'DELIVERY',
 }
 
+export enum RegistrationType {
+  password = 'password',
+  passkeys = 'passkeys'
+}
+
 export class User extends Model implements IUser {
   id: number;
   email: string;
   password: string;
   role: string;
+  registration_type?: string;
   forget_password_token?: string;
 
   static get tableName() {
@@ -27,7 +34,7 @@ export class User extends Model implements IUser {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['email', 'password', 'role'],
+      required: ['email', 'role'],
 
       properties: {
         id: {type: 'integer'},
@@ -35,6 +42,7 @@ export class User extends Model implements IUser {
         password: {type: 'string'},
         forget_password_token: {type: 'string'},
         role: {type: 'string', default: UserRole.user},
+        registration_type: {type: 'string', default: RegistrationType.password}
       },
     };
   }

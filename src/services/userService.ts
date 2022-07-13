@@ -1,12 +1,12 @@
 import ApiError from 'errors/ApiError';
-import {IUser} from 'models/database/user';
+import {IUser, RegistrationType} from 'models/database/user';
 import TokenService from './tokenService';
 import {compareStrings, hash, HashType} from 'helpers/hash';
 import strings from 'strings';
 import {injectable} from 'tsyringe';
 import UserRepository from 'repositories/userRepository';
 import EmailService from './emailService';
-import { TokensModel } from 'models/tokensModel';
+import {TokensModel} from 'models/tokensModel';
 
 @injectable()
 class UserService {
@@ -37,6 +37,71 @@ class UserService {
 
     return this.prepareUserInfoForResponse(tokens, newUser);
   };
+
+  registrationPasskeysInitialize = async (email: string, role: string) => {
+    let user = await this.userRepository.findOneByCondition({email});
+    if (user && user.password) {
+      throw ApiError.unprocessableEntity(strings.user.emailAlreadyInUse);
+    }
+
+    if (!user) {
+      user = await this.userRepository.create({
+        email,
+        role,
+      });
+    }
+
+    return {
+      challenge: process.env.CHALLENGE_PASSKEYS,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      }
+    };
+  }
+
+  registrationPasskeysFinalize = async (id: number, clientData: string) => {
+    const user = await this.userRepository.findOneByCondition({id});
+    if (!user) {
+      throw ApiError.unprocessableEntity(strings.user.wrongUserId);
+    }
+
+    if (user.password) {
+      throw ApiError.unprocessableEntity(strings.user.alreadyFinalized);
+    }
+
+    user.password = clientData;
+    await this.userRepository.update(user);
+
+    const tokens = await this.tokenService.generateTokensAndSave({
+      email: user.email,
+      id: user.id,
+      role: user.role,
+      registration_type: RegistrationType.passkeys
+    });
+
+    return this.prepareUserInfoForResponse(tokens, user);
+  }
+
+  loginPasskeysFinalize = async (email: string, clientData: string) => {
+    const user = await this.userRepository.findOneByCondition({email});
+    if (!user) {
+      throw ApiError.unprocessableEntity(strings.user.isNotRegistered);
+    }
+
+    if (user.password !== clientData) {
+      throw ApiError.unprocessableEntity(strings.user.isNotRegistered);
+    }
+
+    const tokens = await this.tokenService.generateTokensAndSave({
+      email,
+      id: user.id,
+      role: user.role,
+    });
+
+    return this.prepareUserInfoForResponse(tokens, user);
+  }
 
   login = async (email: string, password: string) => {
     const user = await this.userRepository.findOneByCondition({email});
