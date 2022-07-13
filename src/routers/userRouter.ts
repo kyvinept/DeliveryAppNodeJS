@@ -172,6 +172,12 @@ router.post(
  *     tags:
  *      - Auth
  *      - Passkeys
+ *     parameters:
+ *      - in: path
+ *        name: user_id
+ *        schema:
+ *          type: integer
+ *        required: true
  *     requestBody:
  *      description: Body to sign up
  *      required: true
