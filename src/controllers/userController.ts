@@ -42,12 +42,10 @@ class UserController {
 
   loginPasskeysInitialize = async (ctx: RouterContext) => {
     const {email} = ctx.request.body;
-    const challenge = await this.userService.loginPasskeysInitialize(email);
+    const data = await this.userService.loginPasskeysInitialize(email);
 
     ctx.body = {
-      data: {
-        challenge,
-      },
+      data,
     };
   };
 

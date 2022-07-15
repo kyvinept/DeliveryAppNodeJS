@@ -315,6 +315,8 @@ router.post(
  *                  properties:
  *                    challenge:
  *                      type: string
+ *                    credentialID:
+ *                      type: string
  *       404:
  *        description: Not found
  *        content:

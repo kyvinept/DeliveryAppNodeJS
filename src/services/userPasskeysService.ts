@@ -61,9 +61,17 @@ export class UserPasskeysService {
   };
 
   verifyRegistration = async (
-    userPasskeys: IUserPasskeys,
+    userPasskeysId: number,
     registrationOptions: RegistrationPasskeysOptionsModel,
   ) => {
+    const userPasskeys = await this.userPasskeysRepository.findOneByCondition({
+      id: userPasskeysId,
+    });
+
+    if (!userPasskeys) {
+      throw ApiError.badRequest(strings.user.userWasNotFound);
+    }
+
     let verification: VerifiedRegistrationResponse;
     try {
       verification = await verifyRegistrationResponse({
@@ -83,6 +91,9 @@ export class UserPasskeysService {
         strings.user.wasNotVerifiedForSomeReason,
       );
     }
+
+    userPasskeys.credential_id = registrationOptions.id;
+    await this.userPasskeysRepository.update(userPasskeys);
 
     await this.passkeysAuthenticatorService.create(
       userPasskeys.id,

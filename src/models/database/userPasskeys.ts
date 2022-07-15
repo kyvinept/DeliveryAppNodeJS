@@ -5,6 +5,7 @@ export interface IUserPasskeys {
   id: number;
   challenge: string;
   user_id: number;
+  credential_id?: string;
   authenticator?: IPasskeysAuthenticator;
 }
 
@@ -12,6 +13,7 @@ export class UserPasskeys extends Model implements IUserPasskeys {
   id: number;
   challenge: string;
   user_id: number;
+  credential_id?: string;
   authenticator?: IPasskeysAuthenticator;
 
   static get tableName() {
@@ -42,6 +44,7 @@ export class UserPasskeys extends Model implements IUserPasskeys {
         id: {type: 'integer'},
         challenge: {type: 'string'},
         user_id: {type: 'integer'},
+        credential_id: {type: 'string'},
       },
     };
   }

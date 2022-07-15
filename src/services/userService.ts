@@ -97,7 +97,7 @@ class UserService {
     }
 
     await this.userPasskeysService.verifyRegistration(
-      user.passkeys,
+      user.passkeys.id,
       registrationOptions,
     );
 
@@ -119,7 +119,10 @@ class UserService {
       throw ApiError.notFound(strings.user.isNotRegistered);
     }
 
-    return user.passkeys.challenge;
+    return {
+      challenge: user.passkeys.challenge,
+      credentialID: user.passkeys.credential_id,
+    };
   };
 
   loginPasskeysFinalize = async (loginOptions: LoginPasskeysOptionsModel) => {
