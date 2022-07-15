@@ -19,7 +19,10 @@ class UserController {
 
   registrationPasskeysInitialize = async (ctx: RouterContext) => {
     const {email, role} = ctx.request.body;
-    const data = await this.userService.registrationPasskeysInitialize(email, role);
+    const data = await this.userService.registrationPasskeysInitialize(
+      email,
+      role,
+    );
 
     ctx.status = 201;
     ctx.body = {data};
@@ -28,25 +31,33 @@ class UserController {
   registrationPasskeysFinalize = async (ctx: RouterContext) => {
     const {id} = ctx.params;
     const idInt = parseInt(id);
-    const {clientData} = ctx.request.body;
+    const {...registrationOptions} = ctx.request.body;
 
-    const data = await this.userService.registrationPasskeysFinalize(idInt, clientData);
+    const data = await this.userService.registrationPasskeysFinalize(
+      idInt,
+      registrationOptions,
+    );
     ctx.body = {data};
   };
 
   loginPasskeysInitialize = async (ctx: RouterContext) => {
+    const {email} = ctx.request.body;
+    const challenge = await this.userService.loginPasskeysInitialize(email);
+
     ctx.body = {
       data: {
-        challenge: process.env.CHALLENGE_PASSKEYS,
-      }
+        challenge,
+      },
     };
   };
 
   loginPasskeysFinalize = async (ctx: RouterContext) => {
-    const {email, clientData} = ctx.request.body;
-    const data = await this.userService.loginPasskeysFinalize(email, clientData);
+    const {...loginOptions} = ctx.request.body;
+    console.log(loginOptions);
+
+    const data = await this.userService.loginPasskeysFinalize(loginOptions);
     ctx.body = {data};
-  }
+  };
 
   login = async (ctx: RouterContext, next: Koa.Next) => {
     const {email, password} = ctx.request.body;

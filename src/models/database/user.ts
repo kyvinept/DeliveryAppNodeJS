@@ -1,11 +1,13 @@
 import {Model} from 'objection';
+import {IUserPasskeys} from './userPasskeys';
+import {IUserPassword} from './userPassword';
 
 export interface IUser {
   id: number;
   email: string;
   role: string;
-  forget_password_token?: string;
-  registration_type?: string;
+  passkeys?: IUserPasskeys;
+  passwords?: IUserPassword;
 }
 
 export enum UserRole {
@@ -16,19 +18,42 @@ export enum UserRole {
 
 export enum RegistrationType {
   password = 'password',
-  passkeys = 'passkeys'
+  passkeys = 'passkeys',
 }
 
 export class User extends Model implements IUser {
   id: number;
   email: string;
-  password: string;
   role: string;
-  registration_type?: string;
-  forget_password_token?: string;
+  passkeys?: IUserPasskeys;
+  passwords?: IUserPassword;
 
   static get tableName() {
     return 'Users';
+  }
+
+  static get relationMappings() {
+    const {UserPasskeys} = require('./userPasskeys');
+    const {UserPassword} = require('./userPassword');
+
+    return {
+      passkeys: {
+        relation: Model.HasOneRelation,
+        modelClass: UserPasskeys,
+        join: {
+          from: 'Users.id',
+          to: 'User_Passkeys.user_id',
+        },
+      },
+      passwords: {
+        relation: Model.HasOneRelation,
+        modelClass: UserPassword,
+        join: {
+          from: 'Users.id',
+          to: 'User_Passwords.user_id',
+        },
+      },
+    };
   }
 
   static get jsonSchema() {
@@ -39,10 +64,7 @@ export class User extends Model implements IUser {
       properties: {
         id: {type: 'integer'},
         email: {type: 'string'},
-        password: {type: 'string'},
-        forget_password_token: {type: 'string'},
         role: {type: 'string', default: UserRole.user},
-        registration_type: {type: 'string', default: RegistrationType.password}
       },
     };
   }

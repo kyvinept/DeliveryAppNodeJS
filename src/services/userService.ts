@@ -1,12 +1,18 @@
 import ApiError from 'errors/ApiError';
-import {IUser, RegistrationType} from 'models/database/user';
+import {IUser} from 'models/database/user';
 import TokenService from './tokenService';
-import {compareStrings, hash, HashType} from 'helpers/hash';
 import strings from 'strings';
 import {injectable} from 'tsyringe';
 import UserRepository from 'repositories/userRepository';
 import EmailService from './emailService';
 import {TokensModel} from 'models/tokensModel';
+import {
+  LoginPasskeysOptionsModel,
+  RegistrationPasskeysOptionsModel,
+  UserPasskeysService,
+} from './userPasskeysService';
+import {UserPasswordService} from './userPasswordService';
+import {compareStrings, HashType} from 'helpers/hash';
 
 @injectable()
 class UserService {
@@ -14,20 +20,25 @@ class UserService {
     private tokenService: TokenService,
     private userRepository: UserRepository,
     private emailService: EmailService,
+    private userPasskeysService: UserPasskeysService,
+    private userPasswordService: UserPasswordService,
   ) {}
 
   registration = async (email: string, password: string, role: string) => {
-    const user = await this.userRepository.findOneByCondition({email});
+    const user = await this.userRepository.findUserWithPasswordByCondition({
+      email,
+    });
+
     if (user) {
       throw ApiError.unprocessableEntity(strings.user.emailAlreadyInUse);
     }
 
-    const hashedPassword = await hash(password, HashType.password);
     const newUser = await this.userRepository.create({
       email,
-      password: hashedPassword,
       role,
     });
+
+    await this.userPasswordService.createPasswordForUser(newUser.id, password);
 
     const tokens = await this.tokenService.generateTokensAndSave({
       email,
@@ -39,8 +50,11 @@ class UserService {
   };
 
   registrationPasskeysInitialize = async (email: string, role: string) => {
-    let user = await this.userRepository.findOneByCondition({email});
-    if (user && user.password) {
+    let user = await this.userRepository.findUserWithPasskeysByCondition({
+      email,
+    });
+
+    if (user?.passkeys?.authenticator) {
       throw ApiError.unprocessableEntity(strings.user.emailAlreadyInUse);
     }
 
@@ -51,66 +65,98 @@ class UserService {
       });
     }
 
+    let challenge = user.passkeys?.challenge;
+    if (!challenge) {
+      challenge = await this.userPasskeysService.createForRegistration(user);
+    }
+
     return {
-      challenge: process.env.CHALLENGE_PASSKEYS,
+      challenge: challenge,
       user: {
         id: user.id,
         email: user.email,
         role: user.role,
-      }
+      },
     };
-  }
+  };
 
-  registrationPasskeysFinalize = async (id: number, clientData: string) => {
-    const user = await this.userRepository.findOneByCondition({id});
-    if (!user) {
+  registrationPasskeysFinalize = async (
+    id: number,
+    registrationOptions: RegistrationPasskeysOptionsModel,
+  ) => {
+    const user = await this.userRepository.findUserWithPasskeysByCondition({
+      id,
+    });
+
+    if (!user?.passkeys) {
       throw ApiError.unprocessableEntity(strings.user.wrongUserId);
     }
 
-    if (user.password) {
+    if (user.passkeys?.authenticator) {
       throw ApiError.unprocessableEntity(strings.user.alreadyFinalized);
     }
 
-    user.password = clientData;
-    await this.userRepository.update(user);
+    await this.userPasskeysService.verifyRegistration(
+      user.passkeys,
+      registrationOptions,
+    );
 
     const tokens = await this.tokenService.generateTokensAndSave({
       email: user.email,
       id: user.id,
       role: user.role,
-      registration_type: RegistrationType.passkeys
     });
 
     return this.prepareUserInfoForResponse(tokens, user);
-  }
+  };
 
-  loginPasskeysFinalize = async (email: string, clientData: string) => {
-    const user = await this.userRepository.findOneByCondition({email});
-    if (!user) {
+  loginPasskeysInitialize = async (email: string) => {
+    const user = await this.userRepository.findUserWithPasskeysByCondition({
+      email,
+    });
+
+    if (!user.passkeys?.authenticator) {
+      throw ApiError.notFound(strings.user.isNotRegistered);
+    }
+
+    return user.passkeys.challenge;
+  };
+
+  loginPasskeysFinalize = async (loginOptions: LoginPasskeysOptionsModel) => {
+    const user = await this.userRepository.findUserWithPasskeysByCondition({
+      email: loginOptions.email,
+    });
+
+    if (!user.passkeys.authenticator) {
       throw ApiError.unprocessableEntity(strings.user.isNotRegistered);
     }
 
-    if (user.password !== clientData) {
-      throw ApiError.unprocessableEntity(strings.user.isNotRegistered);
-    }
+    await this.userPasskeysService.verifyLogin(user.passkeys, loginOptions);
 
     const tokens = await this.tokenService.generateTokensAndSave({
-      email,
+      email: loginOptions.email,
       id: user.id,
       role: user.role,
     });
 
     return this.prepareUserInfoForResponse(tokens, user);
-  }
+  };
 
   login = async (email: string, password: string) => {
-    const user = await this.userRepository.findOneByCondition({email});
+    const user = await this.userRepository.findUserWithPasswordByCondition({
+      email,
+    });
 
-    if (!user) {
+    if (!user.passwords) {
       throw ApiError.notFound(strings.user.isNotRegistered);
     }
 
-    const comparePassword = compareStrings(password, user.password, HashType.password);
+    const comparePassword = compareStrings(
+      password,
+      user.passwords?.password,
+      HashType.password,
+    );
+
     if (!comparePassword) {
       throw ApiError.unprocessableEntity(strings.user.wrongPassword);
     }
@@ -134,13 +180,14 @@ class UserService {
   };
 
   forgetPassword = async (baseLink: string, email: string) => {
-    const token = this.tokenService.generateForgetPasswordToken(email);
-    const link = `${baseLink}?reset_token=${token}`;
-    this.emailService.sendForgetPasswordMail(email, link);
     const user = await this.userRepository.findOneByCondition({email});
     if (user) {
-      user.forget_password_token = token;
-      await this.userRepository.update(user);
+      const token = await this.userPasswordService.generateForgetPasswordToken(
+        user,
+      );
+
+      const link = `${baseLink}?reset_token=${token}`;
+      this.emailService.sendForgetPasswordMail(email, link);
     }
   };
 
@@ -151,18 +198,15 @@ class UserService {
     }
 
     const email = decodedToken.email;
-    const user = await this.userRepository.findOneByCondition({
-      forget_password_token: token,
+    const user = await this.userRepository.findUserWithPasswordByCondition({
       email,
     });
 
-    if (!user) {
+    if (!user.passwords || user.passwords.forget_password_token !== token) {
       throw ApiError.unprocessableEntity(strings.user.tokenWasExpired);
     }
 
-    user.password = await hash(newPassword, HashType.password);
-    user.forget_password_token = null;
-    await this.userRepository.update(user);
+    this.userPasswordService.updatePassword(user.id, newPassword);
   };
 
   private prepareUserInfoForResponse = (tokens: TokensModel, user: IUser) => {
@@ -171,10 +215,10 @@ class UserService {
       user: {
         id: user.id,
         role: user.role,
-        email: user.email
-      }
-    }
-  }
+        email: user.email,
+      },
+    };
+  };
 }
 
 export default UserService;

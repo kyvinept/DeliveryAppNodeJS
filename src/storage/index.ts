@@ -9,7 +9,9 @@ const client = createClient({
 });
 
 export const initStorage = async () => {
-  client.on('error', (err) => console.log('Redis Client Error'));
+  client.on('error', (err) => {}
+  // console.log('Redis Client Error')
+  );
   await client.connect();
 };
 

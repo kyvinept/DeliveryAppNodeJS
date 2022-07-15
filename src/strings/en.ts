@@ -11,8 +11,10 @@ const en = {
     wrongPassword: 'Wrong password',
     wrongUserId: 'Wrong user id',
     alreadyFinalized: 'Already finalized',
+    userWasNotFound: 'User was not found',
     tokenWasExpired:
       'This token is not active now! Please resend the mail again.',
+    wasNotVerifiedForSomeReason: 'The user was not verified for some reason.'
   },
   restaurant: {
     restaurantAlreadyExist: 'This name is already taken.',

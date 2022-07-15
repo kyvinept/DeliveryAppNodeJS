@@ -186,10 +186,13 @@ router.post(
  *          schema:
  *            type: object
  *            properties:
- *              clientData:
+ *              clientDataJSON:
+ *                type: string
+ *              attestationObject:
  *                type: string
  *            required:
  *              - clientData
+ *              - attestationObject
  *     responses:
  *       200:
  *        description: Success
@@ -241,7 +244,13 @@ router.post(
     id: joiValidation.id,
   }),
   ValidatorMiddleware(ValidationType.body, {
-    clientData: joiValidation.requiredString,
+    id: joiValidation.requiredString,
+    rawId: joiValidation.requiredString,
+    type: joiValidation.requiredString,
+    response: {
+      attestationObject: joiValidation.requiredString,
+      clientDataJSON: joiValidation.requiredString,
+    }
   }),
   userControllerInstance.registrationPasskeysFinalize,
 );
@@ -268,8 +277,11 @@ router.post(
  *                    challenge:
  *                      type: string
  */
-router.get(
-  '/login_passkeys_initialize', 
+router.post(
+  '/login_passkeys_initialize',
+  ValidatorMiddleware(ValidationType.body, {
+    email: joiValidation.email,
+  }),
   userControllerInstance.loginPasskeysInitialize,
 );
 
@@ -345,7 +357,15 @@ router.post(
   '/login_passkeys_finalize', 
   ValidatorMiddleware(ValidationType.body, {
     email: joiValidation.email,
-    clientData: joiValidation.requiredString,
+    id: joiValidation.requiredString,
+    rawId: joiValidation.requiredString,
+    type: joiValidation.requiredString,
+    response: {
+      authenticatorData: joiValidation.requiredString,
+      clientDataJSON: joiValidation.requiredString,
+      signature: joiValidation.requiredString,
+      userHandle: joiValidation.requiredString,
+    }
   }),
   userControllerInstance.loginPasskeysFinalize,
 );
