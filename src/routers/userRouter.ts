@@ -156,7 +156,7 @@ router.post(
  *                        type: object
  */
 router.post(
-  '/registration_passkeys_initialize', 
+  '/registration_passkeys_initialize',
   ValidatorMiddleware(ValidationType.body, {
     email: joiValidation.email,
     role: joiValidation.roles,
@@ -186,13 +186,24 @@ router.post(
  *          schema:
  *            type: object
  *            properties:
- *              clientDataJSON:
+ *              response:
+ *                type: object
+ *                properties:
+ *                  attestationObject:
+ *                    type: string
+ *                  clientDataJSON:
+ *                    type: string
+ *              id:
  *                type: string
- *              attestationObject:
+ *              rawId:
+ *                type: string
+ *              type:
  *                type: string
  *            required:
- *              - clientData
- *              - attestationObject
+ *              - id
+ *              - rawId
+ *              - type
+ *              - response
  *     responses:
  *       200:
  *        description: Success
@@ -223,6 +234,22 @@ router.post(
  *                          type: string
  *       422:
  *        description: Unprocessable entity error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
+ *       404:
+ *        description: Not found
  *        content:
  *          application/json:
  *            schema:
@@ -250,7 +277,7 @@ router.post(
     response: {
       attestationObject: joiValidation.requiredString,
       clientDataJSON: joiValidation.requiredString,
-    }
+    },
   }),
   userControllerInstance.registrationPasskeysFinalize,
 );
@@ -258,11 +285,23 @@ router.post(
 /**
  * @openapi
  * /login_passkeys_initialize:
- *   get:
+ *   post:
  *     summary: Passkeys login
  *     tags:
  *      - Auth
  *      - Passkeys
+ *     requestBody:
+ *      description: Body to login
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *            required:
+ *              - email
  *     responses:
  *       200:
  *        description: Success
@@ -276,6 +315,22 @@ router.post(
  *                  properties:
  *                    challenge:
  *                      type: string
+ *       404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
  */
 router.post(
   '/login_passkeys_initialize',
@@ -301,13 +356,31 @@ router.post(
  *          schema:
  *            type: object
  *            properties:
- *              clientData:
+ *              response:
+ *                type: object
+ *                properties:
+ *                  authenticatorData:
+ *                    type: string
+ *                  clientDataJSON:
+ *                    type: string
+ *                  signature:
+ *                    type: string
+ *                  userHandle:
+ *                    type: string
+ *              id:
+ *                type: string
+ *              rawId:
+ *                type: string
+ *              type:
  *                type: string
  *              email:
  *                type: string
  *            required:
- *              - clientData
+ *              - id
+ *              - rawId
+ *              - type
  *              - email
+ *              - response
  *     responses:
  *       200:
  *        description: Success
@@ -352,9 +425,25 @@ router.post(
  *                      type: array
  *                      items:
  *                        type: object
+ *       404:
+ *        description: Not found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                    errors:
+ *                      type: array
+ *                      items:
+ *                        type: object
  */
 router.post(
-  '/login_passkeys_finalize', 
+  '/login_passkeys_finalize',
   ValidatorMiddleware(ValidationType.body, {
     email: joiValidation.email,
     id: joiValidation.requiredString,
@@ -365,7 +454,7 @@ router.post(
       clientDataJSON: joiValidation.requiredString,
       signature: joiValidation.requiredString,
       userHandle: joiValidation.requiredString,
-    }
+    },
   }),
   userControllerInstance.loginPasskeysFinalize,
 );

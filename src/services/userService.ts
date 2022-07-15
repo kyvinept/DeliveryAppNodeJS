@@ -89,7 +89,7 @@ class UserService {
     });
 
     if (!user?.passkeys) {
-      throw ApiError.unprocessableEntity(strings.user.wrongUserId);
+      throw ApiError.notFound(strings.user.wrongUserId);
     }
 
     if (user.passkeys?.authenticator) {
@@ -126,6 +126,10 @@ class UserService {
     const user = await this.userRepository.findUserWithPasskeysByCondition({
       email: loginOptions.email,
     });
+
+    if (!user) {
+      throw ApiError.notFound(strings.user.userWasNotFound);
+    }
 
     if (!user.passkeys.authenticator) {
       throw ApiError.unprocessableEntity(strings.user.isNotRegistered);
