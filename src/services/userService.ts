@@ -115,7 +115,7 @@ class UserService {
       email,
     });
 
-    if (!user.passkeys?.authenticator) {
+    if (!user?.passkeys?.authenticator) {
       throw ApiError.notFound(strings.user.isNotRegistered);
     }
 
@@ -151,8 +151,12 @@ class UserService {
       email,
     });
 
-    if (!user.passwords) {
+    if (!user) {
       throw ApiError.notFound(strings.user.isNotRegistered);
+    }
+
+    if (!user.passwords) {
+      throw ApiError.unprocessableEntity(strings.user.wrongPassword);
     }
 
     const comparePassword = compareStrings(
