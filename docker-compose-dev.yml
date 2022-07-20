@@ -1,0 +1,3 @@
+services:
+  minio:
+    command: server '/Users/silchenko/server-data' --console-address ":9001"

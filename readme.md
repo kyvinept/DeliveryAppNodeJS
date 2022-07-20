@@ -11,3 +11,14 @@ knex migrate:make migration_create_table
 minio run:
 minio server '/Users/silchenko/server-data' --console-address ":9001"
 
+redis:
+redis-server
+
+docker build . -t silchenko/node-web-app
+docker run -p 3000:3000 -d silchenko/node-web-app
+
+docker-compose build
+docker-compose up
+docker-compose down
+
+docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
