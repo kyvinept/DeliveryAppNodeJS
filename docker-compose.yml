@@ -1,14 +1,17 @@
 version: '3.8'
 services:
-  minio:
-    image: minio/minio:latest
-    container_name: minio-container
-    ports:
-      - '9001:9001'
-    env_file: .env
+  database:
+    image: postgres:latest
+    container_name: postgres-container
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Kyvinept99
     volumes:
-      - minio_data:/Users/silchenko/server-data
-  
+      - database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
   redis:
     image: redis:latest
     hostname: redis
@@ -16,17 +19,51 @@ services:
       - '6379:6379'
     command: redis-server
 
-  server:
-    build: .
-    image: nodejs
-    container_name: nodejs
+  minio:
+    image: minio/minio:latest
+    container_name: minio-container
+    command: server /data --console-address ":9001" 
+    ports:
+     - "9000:9000"
+     - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+
+  api_gateway:
+    build:
+      context: ./ApiGateway
+    ports:
+      - 3002:3002
+    restart: always
+    container_name: api-gateway
+    hostname: api-gateway
+
+  media_service:
+    build: ./MediaService
+    image: media-service
+    container_name: media-service
     restart: unless-stopped
-    env_file: .env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - minio
+
+  delivery_app:
+    build: 
+      context: ./DeliveryApp
+    image: delivery-app
+    container_name: delivery-app
+    restart: unless-stopped
     ports:
       - "3000:3000"
     depends_on:
-      - minio
       - redis
+      - media_service
+      - api_gateway
 
 volumes:
+  database:
   minio_data:
