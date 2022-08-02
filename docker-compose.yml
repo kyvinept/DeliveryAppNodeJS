@@ -32,14 +32,14 @@ services:
     volumes:
       - minio_data:/data
 
-  api_gateway:
-    build:
-      context: ./ApiGateway
-    ports:
-      - 3002:3002
-    restart: always
-    container_name: api-gateway
-    hostname: api-gateway
+  # api_gateway:
+  #   build:
+  #     context: ./ApiGateway
+  #   ports:
+  #     - 3002:3002
+  #   restart: always
+  #   container_name: api-gateway
+  #   hostname: api-gateway
 
   media_service:
     build: ./MediaService
@@ -62,7 +62,7 @@ services:
     depends_on:
       - redis
       - media_service
-      - api_gateway
+      # - api_gateway
 
 volumes:
   database:
