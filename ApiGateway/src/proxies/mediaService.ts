@@ -1,23 +1,18 @@
-import proxy from 'koa-proxies';
+import {ConfigModel} from './ConfigModel';
 
-const config = {
+const config: ConfigModel = {
   baseUrl: 'http://localhost:3001',
   routes: [
     {
       route: '/api/upload_image',
+      http: 'POST',
+      authRequired: true,
     },
     {
+      http: 'GET',
       route: '/:name',
     },
   ],
 };
 
-const proxies = config.routes.map((item) => {
-  return proxy(item.route, {
-    target: config.baseUrl,
-    changeOrigin: false,
-    logs: true,
-  });
-});
-
-export default proxies;
+export default config;

@@ -19,6 +19,16 @@ services:
       - '6379:6379'
     command: redis-server
 
+  rabbitmq:
+    hostname: myrabbitmq
+    image: rabbitmq:latest
+    ports:
+      - 15673:15672
+      - 5673:5672
+    restart: always
+    volumes:
+      - ./data:/var/lib/rabbitmq
+
   minio:
     image: minio/minio:latest
     container_name: minio-container
