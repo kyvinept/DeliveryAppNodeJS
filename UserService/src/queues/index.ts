@@ -28,6 +28,7 @@ class RabbitMQ {
     this.channel.consume(QueueType.checkAuth, (msg) => {
       if (msg !== null) {
         const json = JSON.parse(msg.content.toString());
+
         this.channel.ack(msg);
 
         let user: Object = undefined;
