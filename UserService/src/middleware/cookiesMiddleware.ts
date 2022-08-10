@@ -4,7 +4,7 @@ import Koa from 'koa';
 
 export default async (ctx: RouterContext, next: Koa.Next) => {
   try {
-    const jsonUser = ctx.cookies.get('user');
+    const jsonUser = ctx.request.header['user'] as string;
     console.log(jsonUser);
 
     if (!jsonUser) {

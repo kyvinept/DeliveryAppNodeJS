@@ -12,9 +12,7 @@ export const authMiddleware = (item: RouteModel) => {
         throw ApiError.unauthorized();
       }
 
-      ctx.cookies.set('user', JSON.stringify(user), {
-        secure: process.env.NODE_ENV === 'testing' ? true : false,
-      });
+      ctx.request.header['user'] = JSON.stringify(user);
     }
 
     await next();
