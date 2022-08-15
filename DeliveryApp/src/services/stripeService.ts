@@ -1,6 +1,6 @@
 import {injectable} from 'tsyringe';
 import Stripe from 'stripe';
-import {IUser} from 'models/database/user';
+import {IUser} from 'models/user';
 import constants from '../constants';
 
 @injectable()

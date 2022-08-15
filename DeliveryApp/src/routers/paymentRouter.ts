@@ -8,7 +8,7 @@ import {container} from 'tsyringe';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import joiValidation from 'constants/joiValidation';
 import PaymentController from 'controllers/paymentController';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 
 const router = new Router();
 const paymentControllerInstance = container.resolve(PaymentController);

@@ -3,7 +3,7 @@ import {Server} from 'http';
 import {OnEventType} from './eventType';
 import {ChatSocketServer} from './chatSocketServer';
 import {container, injectable} from 'tsyringe';
-import {SocketAuthMiddleware} from 'middleware';
+// import {SocketAuthMiddleware} from 'middleware';
 import {LocationSocketServer} from './locationSocketServer';
 
 enum RouteType {
@@ -36,7 +36,7 @@ export class SocketServer {
     const routeTypes = Object.values(RouteType);
     routeTypes.forEach((type) => {
       io.of(type)
-        .use(SocketAuthMiddleware)
+        // .use(SocketAuthMiddleware)
         .on(OnEventType.connection, this.onConnection(type));
     });
   };

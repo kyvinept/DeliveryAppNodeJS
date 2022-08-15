@@ -10,7 +10,7 @@ import {
 } from './interfaces/locationModels';
 import strings from 'strings';
 import OrderService from 'services/orderService';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 import ApiError from 'errors/ApiError';
 
 @injectable()

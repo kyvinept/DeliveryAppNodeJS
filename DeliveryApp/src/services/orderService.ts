@@ -8,7 +8,7 @@ import {OrderGraphFetched} from 'models/database/order';
 import StorageManager from 'storage/storageManager';
 import {Location} from 'models/location';
 import PaymentService from './paymentService';
-import {IUser, UserRole} from 'models/database/user';
+import {IUser, UserRole} from 'models/user';
 import DishService from './dishService';
 import PushNotificationService from './pushNotificationService';
 

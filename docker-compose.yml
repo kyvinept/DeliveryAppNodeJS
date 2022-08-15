@@ -1,5 +1,15 @@
 version: '3.8'
 services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:latest
+    ports:
+      - 15673:15672
+      - 5673:5672
+    restart: always
+    volumes:
+      - ./data:/var/lib/rabbitmq
+
   database:
     image: postgres:latest
     container_name: postgres-container
@@ -18,16 +28,6 @@ services:
     ports:
       - '6379:6379'
     command: redis-server
-
-  rabbitmq:
-    hostname: myrabbitmq
-    image: rabbitmq:latest
-    ports:
-      - 15673:15672
-      - 5673:5672
-    restart: always
-    volumes:
-      - ./data:/var/lib/rabbitmq
 
   minio:
     image: minio/minio:latest
@@ -51,6 +51,18 @@ services:
   #   container_name: api-gateway
   #   hostname: api-gateway
 
+  user_service:
+    build: ./UserService
+    ports:
+      - "3003:3003"
+    restart: unless-stopped
+    image: user-service
+    container_name: user-service
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+
   media_service:
     build: ./MediaService
     image: media-service
@@ -61,17 +73,17 @@ services:
     depends_on:
       - minio
 
-  delivery_app:
-    build: 
-      context: ./DeliveryApp
-    image: delivery-app
-    container_name: delivery-app
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    depends_on:
-      - redis
-      - media_service
+  # delivery_app:
+  #   build: 
+  #     context: ./DeliveryApp
+  #   image: delivery-app
+  #   container_name: delivery-app
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - redis
+  #     - media_service
       # - api_gateway
 
 volumes:

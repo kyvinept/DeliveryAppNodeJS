@@ -10,7 +10,7 @@ import {container} from 'tsyringe';
 import Joi from 'joi';
 import RestaurantController from 'controllers/restaurantController';
 import {ValidationType} from 'middleware/validatorMiddleware';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 import joiValidation from 'constants/joiValidation';
 import {ImageType} from 'models/imageType';
 

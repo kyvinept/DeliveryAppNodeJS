@@ -11,7 +11,10 @@ class RabbitMQ {
   private channel: amqplib.Channel;
 
   constructor() {
-    this.initQueue();
+    setTimeout(() => {
+      console.log('init rabbitmq');
+      this.initQueue();
+    }, 30000);
   }
 
   private initQueue = async () => {

@@ -3,7 +3,7 @@ import Koa from 'koa';
 import {singleton} from 'tsyringe';
 import OrderService from 'services/orderService';
 import BaseController from './baseController';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 
 @singleton()
 class OrderController extends BaseController {

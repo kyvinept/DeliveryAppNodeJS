@@ -1,12 +1,10 @@
-import ApiError from 'errors/ApiError';
-import {IUser} from 'models/database/user';
+import {IUser} from 'models/user';
 import {DevicePlatform} from 'models/devicePlatform';
 import {
   SendNotificationModelUserId,
   SendNotificationModelUserRole,
 } from 'models/sendNotificationModel';
 import PushNotificationRepository from 'repositories/pushNotificationRepository';
-import strings from 'strings';
 import {injectable} from 'tsyringe';
 import OnesignalService from './onesignalService';
 

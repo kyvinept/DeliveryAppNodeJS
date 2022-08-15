@@ -11,7 +11,7 @@ import Joi from 'joi';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import DishController from 'controllers/dishController';
 import {DishType} from 'models/dishType';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 import joiValidation from 'constants/joiValidation';
 import {ImageType} from 'models/imageType';
 

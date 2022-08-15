@@ -1,5 +1,5 @@
 import ApiError from 'errors/ApiError';
-import {IUser} from 'models/database/user';
+import {IUser} from 'models/user';
 import {PaymentStatus} from 'models/paymentStatus';
 import PaymentRepository from 'repositories/paymentRepository';
 import strings from 'strings';

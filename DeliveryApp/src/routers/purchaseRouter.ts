@@ -7,7 +7,7 @@ import {
 import {container} from 'tsyringe';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import joiValidation from 'constants/joiValidation';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 import PurchaseController from 'controllers/purchaseController';
 import Joi from 'joi';
 import {DevicePlatform} from 'models/devicePlatform';

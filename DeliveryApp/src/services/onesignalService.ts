@@ -1,13 +1,7 @@
-import ApiError from 'errors/ApiError';
-import strings from 'strings';
 import {injectable} from 'tsyringe';
 import * as OneSignal from 'onesignal-node';
 import {DevicePlatform} from 'models/devicePlatform';
-import {UserRole} from 'models/database/user';
-import {
-  OnesignalSendNotificationModel,
-  SendNotificationModelIdentifier,
-} from 'models/sendNotificationModel';
+import {OnesignalSendNotificationModel} from 'models/sendNotificationModel';
 import {CreateNotificationBody} from 'onesignal-node/lib/types';
 
 @injectable()

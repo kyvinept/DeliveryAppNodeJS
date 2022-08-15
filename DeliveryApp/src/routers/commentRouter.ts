@@ -9,7 +9,7 @@ import Joi from 'joi';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import joiValidation from 'constants/joiValidation';
 import CommentController from 'controllers/commentController';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 
 const router = new Router();
 const commentControllerInstance = container.resolve(CommentController);

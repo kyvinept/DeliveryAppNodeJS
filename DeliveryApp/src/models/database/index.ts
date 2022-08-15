@@ -1,4 +1,3 @@
-import {User} from './user';
 import {Token} from './token';
 import {Restaurant} from './restaurant';
 import {Image} from './image';
@@ -11,7 +10,6 @@ import {Comment} from './comment';
 import {Payment} from './payment';
 
 export {
-  User,
   Token,
   Image,
   Restaurant,

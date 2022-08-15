@@ -5,10 +5,11 @@ import proxy from 'koa-proxies';
 import {authMiddleware} from '../middleware/authMiddleware';
 import {RouteModel} from './ConfigModel';
 import userServiceConfig from './userService';
+import deliveryAppConfig from './deliveryApp';
 
 const router = new Router();
 
-const configs = [mediaServiceConfig, userServiceConfig];
+const configs = [mediaServiceConfig, userServiceConfig, deliveryAppConfig];
 
 const proxyMiddleware = (baseUrl: string, item: RouteModel) => {
   return async (ctx: RouterContext, next: Koa.Next) => {

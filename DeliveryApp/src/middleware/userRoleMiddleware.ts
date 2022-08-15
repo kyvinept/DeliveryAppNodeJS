@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import ApiError from 'errors/ApiError';
-import {IUser, UserRole} from 'models/database/user';
+import {IUser, UserRole} from 'models/user';
 import {RouterContext} from '@koa/router';
 
 export default (userRole: UserRole) => {

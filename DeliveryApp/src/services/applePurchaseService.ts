@@ -1,9 +1,6 @@
 import ApiError from 'errors/ApiError';
-import {IUser} from 'models/database/user';
-import {PaymentStatus} from 'models/paymentStatus';
-import PaymentRepository from 'repositories/paymentRepository';
 import strings from 'strings';
-import {delay, inject, injectable} from 'tsyringe';
+import {injectable} from 'tsyringe';
 import appleReceiptVerify from 'node-apple-receipt-verify';
 
 @injectable()

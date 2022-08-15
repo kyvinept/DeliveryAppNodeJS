@@ -8,7 +8,7 @@ import {container} from 'tsyringe';
 import Joi from 'joi';
 import {ValidationType} from 'middleware/validatorMiddleware';
 import OrderController from 'controllers/orderController';
-import {UserRole} from 'models/database/user';
+import {UserRole} from 'models/user';
 import {OrderStatus} from 'models/orderStatus';
 import joiValidation from 'constants/joiValidation';
 

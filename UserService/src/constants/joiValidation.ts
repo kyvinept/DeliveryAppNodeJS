@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { UserRole } from 'models/database/user';
+import {UserRole} from 'models/database/user';
 
 export default {
   email: Joi.string().email().lowercase().required(),
