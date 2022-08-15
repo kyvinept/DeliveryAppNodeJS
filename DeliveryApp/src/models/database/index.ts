@@ -1,6 +1,5 @@
 import {Token} from './token';
 import {Restaurant} from './restaurant';
-import {Image} from './image';
 import {Dish} from './dish';
 import {Order} from './order';
 import {RestaurantsOrders} from './restaurant_order';
@@ -11,7 +10,6 @@ import {Payment} from './payment';
 
 export {
   Token,
-  Image,
   Restaurant,
   Dish,
   Order,

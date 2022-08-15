@@ -3,6 +3,7 @@ import Koa from 'koa';
 import mediaServiceConfig from './mediaService';
 import proxy from 'koa-proxies';
 import {authMiddleware} from '../middleware/authMiddleware';
+import {userRoleMiddleware} from '../middleware/userRoleMiddleware';
 import {RouteModel} from './ConfigModel';
 import userServiceConfig from './userService';
 import deliveryAppConfig from './deliveryApp';
@@ -27,6 +28,7 @@ configs.forEach((config) => {
         router.get(
           item.route,
           authMiddleware(item),
+          userRoleMiddleware(item.role),
           proxyMiddleware(config.baseUrl, item),
         );
         break;
@@ -35,6 +37,25 @@ configs.forEach((config) => {
         router.post(
           item.route,
           authMiddleware(item),
+          userRoleMiddleware(item.role),
+          proxyMiddleware(config.baseUrl, item),
+        );
+        break;
+
+      case 'PATCH':
+        router.patch(
+          item.route,
+          authMiddleware(item),
+          userRoleMiddleware(item.role),
+          proxyMiddleware(config.baseUrl, item),
+        );
+        break;
+
+      case 'DELETE':
+        router.delete(
+          item.route,
+          authMiddleware(item),
+          userRoleMiddleware(item.role),
           proxyMiddleware(config.baseUrl, item),
         );
         break;

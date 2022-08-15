@@ -2,7 +2,6 @@ import Router from '@koa/router';
 import {
   AuthMiddleware,
   UserRoleMiddleware,
-  UploadImageMiddleware,
   ValidatorMiddleware,
   ImageValidatorMiddleware,
 } from 'middleware';
@@ -13,7 +12,6 @@ import DishController from 'controllers/dishController';
 import {DishType} from 'models/dishType';
 import {UserRole} from 'models/user';
 import joiValidation from 'constants/joiValidation';
-import {ImageType} from 'models/imageType';
 
 const router = new Router();
 const dishControllerInstance = container.resolve(DishController);
@@ -167,7 +165,7 @@ router.post(
   ValidatorMiddleware(ValidationType.link, {
     restaurantId: Joi.number().min(1).required(),
   }),
-  ImageValidatorMiddleware(ImageType.dish),
+  ImageValidatorMiddleware,
   dishControllerInstance.create,
 );
 
@@ -315,7 +313,7 @@ router.patch(
   ValidatorMiddleware(ValidationType.link, {
     id: Joi.number().min(1).required(),
   }),
-  ImageValidatorMiddleware(ImageType.dish),
+  ImageValidatorMiddleware,
   dishControllerInstance.update,
 );
 
@@ -607,12 +605,12 @@ router.get(
  *                      items:
  *                        type: object
  */
-router.post(
-  '/dishes/upload_image',
-  AuthMiddleware,
-  UserRoleMiddleware(UserRole.serviceProvider),
-  UploadImageMiddleware,
-  dishControllerInstance.uploadImage,
-);
+// router.post(
+//   '/dishes/upload_image',
+//   AuthMiddleware,
+//   UserRoleMiddleware(UserRole.serviceProvider),
+//   UploadImageMiddleware,
+//   dishControllerInstance.uploadImage,
+// );
 
 export default router;

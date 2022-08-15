@@ -6,7 +6,6 @@ import bodyParser from 'koa-bodyparser';
 import {ErrorHandlingMiddleware} from './src/middleware';
 import Router from '@koa/router';
 import routers from './src/routers';
-import imageRouter from './src/routers/imageRouter';
 import staticRouter from './src/routers/staticRouter';
 import {SocketServer} from 'sockets';
 import {createServer} from 'http';
@@ -23,7 +22,6 @@ const router = new Router();
 
 router.use(staticRouter.routes());
 router.use('/api', routers.routes());
-router.use(imageRouter.routes());
 
 app.use(logger());
 app.use(json());

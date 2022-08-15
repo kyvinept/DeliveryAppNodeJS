@@ -4,7 +4,6 @@ import {injectable} from 'tsyringe';
 import DishRepository from 'repositories/dishRepository';
 import {DishType} from 'models/dishType';
 import RestaurantRepository from 'repositories/restaurantRepository';
-import ImageService from './imageService';
 
 export interface DishCreateModel {
   restaurantId: number;
@@ -29,7 +28,6 @@ class DishService {
   constructor(
     private restaurantRepository: RestaurantRepository,
     private dishRepository: DishRepository,
-    private imageService: ImageService,
   ) {}
 
   create = async (model: DishCreateModel, currentUserId: number) => {
@@ -103,7 +101,7 @@ class DishService {
     }
 
     if (model.images) {
-      await this.imageService.replaceImages(dish.images, model.images);
+      // await this.imageService.replaceImages(dish.images, model.images);
 
       dish.images = model.images;
     }

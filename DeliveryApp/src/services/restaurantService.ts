@@ -3,7 +3,6 @@ import strings from 'strings';
 import {injectable} from 'tsyringe';
 import RestaurantRepository from 'repositories/restaurantRepository';
 import {Location} from 'models/location';
-import ImageService from './imageService';
 import PushNotificationService from './pushNotificationService';
 import {IUser, UserRole} from 'models/user';
 
@@ -27,7 +26,6 @@ export interface RestaurantUpdateModel {
 class RestaurantService {
   constructor(
     private restaurantRepository: RestaurantRepository,
-    private imageService: ImageService,
     private pushNotificationService: PushNotificationService,
   ) {}
 
@@ -94,7 +92,7 @@ class RestaurantService {
     }
 
     if (model.images) {
-      await this.imageService.replaceImages(restaurant.images, model.images);
+      // await this.imageService.replaceImages(restaurant.images, model.images);
 
       restaurant.images = model.images;
     }

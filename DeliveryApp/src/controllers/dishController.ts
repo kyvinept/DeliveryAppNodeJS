@@ -1,17 +1,12 @@
 import {RouterContext} from '@koa/router';
 import Koa from 'koa';
-import {ImageType} from 'models/imageType';
 import DishService from 'services/dishService';
 import {singleton} from 'tsyringe';
-import ImageController from 'controllers/imageController';
 import BaseController from './baseController';
 
 @singleton()
 class DishController extends BaseController {
-  constructor(
-    private dishService: DishService,
-    private imageController: ImageController,
-  ) {
+  constructor(private dishService: DishService) {
     super();
   }
 
@@ -86,7 +81,7 @@ class DishController extends BaseController {
   };
 
   uploadImage = async (ctx: RouterContext, next: Koa.Next) => {
-    await this.imageController.save(ctx, next, ImageType.dish);
+    // await this.imageController.save(ctx, next, ImageType.dish);
   };
 }
 

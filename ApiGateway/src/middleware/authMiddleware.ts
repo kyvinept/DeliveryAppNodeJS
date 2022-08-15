@@ -13,6 +13,7 @@ export const authMiddleware = (item: RouteModel) => {
       }
 
       ctx.request.header['user'] = JSON.stringify(user);
+      ctx.user = user;
     }
 
     await next();
