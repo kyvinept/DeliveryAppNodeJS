@@ -38,6 +38,10 @@ class OrderService {
   ) {}
 
   create = async (model: OrderModel, user: IUser) => {
+    if (!(await this.dishService.checkIfExistsByIds(model.dishIds))) {
+      throw ApiError.notFound(strings.dish.dishNotFound);
+    }
+
     const order = await this.orderRepository.create({
       restaurant_id: model.restaurantId,
       name: model.name,

@@ -27,9 +27,6 @@ app.use(logger());
 app.use(json());
 app.use(bodyParser());
 app.use(ErrorHandlingMiddleware);
-app.use(router.routes()).use(router.allowedMethods());
-
-swagger(app);
 
 app.use(async (ctx, next) => {
   if (!ctx.request.origin.includes(process.env.ALLOWED_ORIGIN)) {
@@ -38,6 +35,10 @@ app.use(async (ctx, next) => {
 
   await next();
 });
+
+app.use(router.routes()).use(router.allowedMethods());
+
+swagger(app);
 
 export const listen = (port: string) => {
   httpServer.listen(port, () => {

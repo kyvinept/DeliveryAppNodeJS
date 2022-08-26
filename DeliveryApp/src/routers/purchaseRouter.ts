@@ -95,7 +95,7 @@ const purchaseControllerInstance = container.resolve(PurchaseController);
 router.post(
   '/purchases/verify',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.user),
+  // UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.body, {
     receipt: joiValidation.requiredString,
     platform: Joi.string()

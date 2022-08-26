@@ -63,15 +63,15 @@ services:
     links:
       - rabbitmq
 
-  media_service:
-    build: ./MediaService
-    image: media-service
-    container_name: media-service
-    restart: unless-stopped
-    ports:
-      - "3001:3001"
-    depends_on:
-      - minio
+  # media_service:
+  #   build: ./MediaService
+  #   image: media-service
+  #   container_name: media-service
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3001:3001"
+  #   depends_on:
+  #     - minio
 
   # delivery_app:
   #   build: 

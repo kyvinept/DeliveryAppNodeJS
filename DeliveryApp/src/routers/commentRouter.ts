@@ -132,7 +132,7 @@ const commentControllerInstance = container.resolve(CommentController);
 router.post(
   '/restaurants/:id/comments',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.user),
+  // UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.body, {
     comment: Joi.string().min(2).required(),
     rating: Joi.number().min(0).max(5).required(),
@@ -258,7 +258,7 @@ router.post(
 router.patch(
   '/comments/:id',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.user),
+  // UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.body, {
     comment: Joi.string().min(2),
     rating: Joi.number().min(0).max(5),

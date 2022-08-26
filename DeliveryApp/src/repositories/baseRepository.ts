@@ -64,6 +64,12 @@ export default class BaseRepository<T extends Model> {
     return result;
   };
 
+  countByIds = async (ids: number[]): Promise<number> => {
+    const countModel = this.type.query().count().findByIds(ids).first();
+    this.type.query().findByIds(ids);
+    return ((await countModel) as any).count;
+  };
+
   getAll = async (model: GetAllModel) => {
     const condition = this.type.query();
     if (model.graphFetched) {

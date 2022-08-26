@@ -46,18 +46,18 @@ export class Restaurant extends Model implements IRestaurant {
     };
   }
 
-  static get relationMappings() {
-    const {User} = require('./user');
+  // static get relationMappings() {
+  //   const {User} = require('./user');
 
-    return {
-      user: {
-        relation: Model.HasOneRelation,
-        modelClass: User,
-        join: {
-          from: 'Restaurants.owner_id',
-          to: 'Users.id',
-        },
-      },
-    };
-  }
+  //   return {
+  //     user: {
+  //       relation: Model.HasOneRelation,
+  //       modelClass: User,
+  //       join: {
+  //         from: 'Restaurants.owner_id',
+  //         to: 'Users.id',
+  //       },
+  //     },
+  //   };
+  // }
 }

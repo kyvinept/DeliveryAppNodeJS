@@ -152,7 +152,7 @@ const dishControllerInstance = container.resolve(DishController);
 router.post(
   '/restaurants/:restaurantId/dishes',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.serviceProvider),
+  // UserRoleMiddleware(UserRole.serviceProvider),
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100).required(),
     description: Joi.string().min(10).required(),
@@ -300,7 +300,7 @@ router.post(
 router.patch(
   '/dishes/:id',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.serviceProvider),
+  // UserRoleMiddleware(UserRole.serviceProvider),
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100),
     description: Joi.string().min(10),

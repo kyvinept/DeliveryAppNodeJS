@@ -60,12 +60,12 @@ class RestaurantService {
       id: model.id,
     });
 
-    if (restaurant.owner_id != currentUserId) {
-      throw ApiError.forbidden();
-    }
-
     if (!restaurant) {
       throw ApiError.notFound(strings.restaurant.restaurantNotFound);
+    }
+
+    if (restaurant.owner_id != currentUserId) {
+      throw ApiError.forbidden();
     }
 
     if (model.name) {

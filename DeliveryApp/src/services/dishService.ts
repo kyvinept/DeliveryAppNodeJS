@@ -112,6 +112,10 @@ class DishService {
     return dish;
   };
 
+  checkIfExistsByIds = async (ids: number[]) => {
+    return ids.length == (await this.dishRepository.countByIds(ids));
+  };
+
   getOne = async (id: number) => {
     const dish = await this.dishRepository.findOneByCondition({id});
     if (!dish) {

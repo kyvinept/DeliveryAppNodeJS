@@ -33,7 +33,8 @@
     "constants": "src/constants",
     "sockets": "src/sockets",
     "storage": "src/storage",
-    "crons": "src/crons"
+    "crons": "src/crons",
+    "queues": "src/queues"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

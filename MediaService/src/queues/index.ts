@@ -1,23 +1,18 @@
 import amqplib from 'amqplib';
-import {v4} from 'uuid';
-
-interface Dictionary<T> {
-  [Key: string]: T;
-}
+import ImageService from 'services/imageService';
+import {container, injectable} from 'tsyringe';
 
 enum QueueType {
   checkImage = 'check_image',
   checkImageResponse = 'check_image_res',
 }
 
+@injectable()
 class Queue {
   private connection!: amqplib.Connection;
   private channel!: amqplib.Channel;
-  private requests: Dictionary<
-    (value: PromiseLike<boolean | undefined>) => void
-  > = {};
 
-  constructor() {
+  constructor(private imageService: ImageService) {
     this.initQueue();
   }
 
@@ -32,35 +27,32 @@ class Queue {
     await this.channel.assertQueue(QueueType.checkImage);
     await this.channel.assertQueue(QueueType.checkImageResponse);
 
-    this.channel.consume(QueueType.checkImageResponse, (msg) => {
+    this.channel.consume(QueueType.checkImage, async (msg) => {
       if (msg !== null) {
         const json = JSON.parse(msg.content.toString());
         console.log('Recieved:', json);
         this.channel.ack(msg);
 
-        this.requests[json.id] && this.requests[json.id](json.response);
-        delete this.requests[json.id];
+        if (json.imageUrls) {
+          this.channel.sendToQueue(
+            QueueType.checkImageResponse,
+            Buffer.from(
+              JSON.stringify({
+                id: json.id,
+                response: await this.imageService.checkIfImagesExist(
+                  json.imageUrls,
+                ),
+              }),
+            ),
+          );
+        }
       } else {
         console.log('Consumer cancelled by server');
       }
     });
   };
-
-  checkIfImagesExist = async (imageUrls: string[]) => {
-    return new Promise<boolean>((resolve, reject) => {
-      const id = v4();
-      const data = {
-        id,
-        imageUrls,
-      };
-
-      this.channel.sendToQueue(
-        QueueType.checkImage,
-        Buffer.from(JSON.stringify(data)),
-      );
-      this.requests[id] = resolve;
-    });
-  };
 }
 
-export default new Queue();
+const queueInstance = container.resolve(Queue);
+
+export default queueInstance;

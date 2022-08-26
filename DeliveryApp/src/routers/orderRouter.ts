@@ -387,7 +387,7 @@ router.get(
 router.patch(
   '/orders/:id',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.delivery),
+  // UserRoleMiddleware(UserRole.delivery),
   ValidatorMiddleware(ValidationType.body, {
     status: Joi.string()
       .valid(...Object.values(OrderStatus).map((item) => item.toString()))
@@ -573,7 +573,7 @@ router.patch(
 router.post(
   '/restaurants/:id/orders',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.user),
+  // UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.body, {
     name: Joi.string().min(2).max(100).required(),
     comment: Joi.string(),

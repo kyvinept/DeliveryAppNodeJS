@@ -102,7 +102,7 @@ const paymentControllerInstance = container.resolve(PaymentController);
 router.patch(
   '/payments/:id/confirm',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.user),
+  // UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.link, {
     id: joiValidation.id,
   }),
@@ -212,7 +212,7 @@ router.patch(
 router.get(
   '/orders/:id/payment_details',
   AuthMiddleware,
-  UserRoleMiddleware(UserRole.user),
+  // UserRoleMiddleware(UserRole.user),
   ValidatorMiddleware(ValidationType.link, {
     id: joiValidation.id,
   }),

@@ -5,6 +5,7 @@ import './src/extensions';
 import {Model} from 'objection';
 import connection from 'configs/knex';
 import {listen} from './app';
+import './src/queues';
 
 const PORT = process.env.PORT;
 
