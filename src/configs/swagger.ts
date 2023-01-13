@@ -6,7 +6,7 @@ const configure = (app: Koa) => {
   createSwaggerMiddleware(app, {
     title: 'The Service',
     version: '1.0.0',
-    apiUrl: 'https://delivery-app-for-client-apps.herokuapp.com/api',
+    apiUrl: 'http://delivery-node-js-app.eu-4.evennode.com/api',
     parseOnRequest: false,
     apis: [path.join(process.cwd(), '/src/routers/*.ts')],
     securityDefinitions: {
