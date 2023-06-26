@@ -18,7 +18,7 @@ const createBucketIfNeeded = async () => {
       }
     }
 
-    await client.makeBucket(process.env.BUCKET_NAME, 'us-east-1');
+    await client.makeBucket(process.env.BUCKET_NAME, process.env.BUCKET_REGION);
   } catch (e) {
     console.log('createBucketIfNeeded error', e);
   }
